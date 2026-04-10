@@ -5,245 +5,267 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduBot - Voice Chat</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-
   <style>
     body { font-family: 'Roboto', sans-serif; background: black; }
-    h1, h2, h3, h4, h5, h6, nav, button { font-family: 'Poppins', sans-serif; }
+    h1,h2,h3,h4,h5,h6,nav,button { font-family: 'Poppins', sans-serif; }
 
-    /* Removed background image – solid black only */
-    .welcome-bg { display: none; }
-
-    .popup-indicator {
+    .indicator {
       display: none;
       position: absolute;
-      bottom: 8px;
-      right: 12px;
-      background: rgba(59, 130, 246, 0.9);
-      color: white;
-      padding: 6px 12px;
+      bottom: 8px; right: 12px;
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 500;
       animation: blink 1.5s infinite;
     }
-    @keyframes blink {
-      0% { opacity: 0.2; }
-      50% { opacity: 1; }
-      100% { opacity: 0.2; }
-    }
+    @keyframes blink { 0%,100% { opacity:0.3; } 50% { opacity:1; } }
+
+    .msg-user { display:flex; justify-content:flex-end; margin-bottom:10px; }
+    .msg-user span { background:#1d4ed8; padding:10px 14px; border-radius:18px 18px 4px 18px; max-width:75%; word-break:break-word; font-size:14px; line-height:1.5; }
+    .msg-bot { display:flex; justify-content:flex-start; margin-bottom:10px; }
+    .msg-bot span { background:#1e293b; border:1px solid #334155; padding:10px 14px; border-radius:18px 18px 18px 4px; max-width:75%; word-break:break-word; font-size:14px; line-height:1.5; }
+    .msg-system { text-align:center; font-size:12px; color:#64748b; margin-bottom:10px; }
+
+    .mic-active { background: #16a34a !important; animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(22,163,74,0.5);} 50%{box-shadow:0 0 0 10px rgba(22,163,74,0);} }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
   </style>
 </head>
 
 <body class="min-h-screen flex flex-col bg-black text-white">
 
   <!-- HEADER -->
-  <header class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 shadow-lg 
-                 rounded-3xl mt-6 mx-4 sm:mx-8 lg:mx-20 backdrop-blur-md">
-
+  <header class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 shadow-lg rounded-3xl mt-6 mx-4 sm:mx-8 lg:mx-20 backdrop-blur-md">
     <div class="container mx-auto flex flex-col items-center px-4 py-4">
       <div class="flex flex-col items-center">
-        
-        <!-- White circular border -->
         <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white p-1 shadow-xl overflow-hidden border-4 border-white">
-          <img src="images__3_-removebg-preview.png" alt="EduBot Logo" class="w-full h-full object-cover" />
+          <img src="images__3_-removebg-preview.png" alt="EduBot Logo" class="w-full h-full object-cover"/>
         </div>
-
-        <h1 class="text-center text-base sm:text-lg md:text-2xl font-bold tracking-wide mt-3">
-          EduBot
-        </h1>
-         <p class="text-center text-xs sm:text-sm text-gray-300 mt-1">
-          (Your Smart Campus Assistant)
-        </p>
+        <h1 class="text-center text-base sm:text-lg md:text-2xl font-bold tracking-wide mt-3">EduBot</h1>
+        <p class="text-center text-xs sm:text-sm text-gray-300 mt-1">(Your Smart Campus Assistant)</p>
       </div>
-
-      <!-- Navigation -->
       <nav class="mt-4 w-full overflow-x-auto">
-        <ul class="flex flex-nowrap justify-center whitespace-nowrap gap-6 
-                   text-white font-medium bg-blue-950/70 rounded-xl px-6 py-2 
-                   shadow-md backdrop-blur-sm">
+        <ul class="flex flex-nowrap justify-center whitespace-nowrap gap-6 text-white font-medium bg-blue-950/70 rounded-xl px-6 py-2 shadow-md backdrop-blur-sm">
           <li><a href="welcomescreen.html" class="hover:text-blue-400 transition">Home</a></li>
-          <li><a href="voicechat.html" class="hover:text-blue-400 transition">Voice Chat</a></li>
-          
+          <li><a href="voicechat.html" class="text-blue-400 font-semibold transition">Voice Chat</a></li>
+          <li><a href="academics.html" class="hover:text-blue-400 transition">Academics</a></li>
+          <li><a href="faq.html" class="hover:text-blue-400 transition">FAQ</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <!-- MAIN -->
-  <main class="flex-grow flex items-center justify-center p-6">
-    <div class="w-full max-w-2xl h-[520px] bg-gradient-to-br from-blue-900/40 to-blue-800/40 
-                text-white rounded-2xl shadow-lg backdrop-blur-lg 
-                border border-blue-900/40 flex flex-col overflow-hidden">
+  <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+    <div class="w-full max-w-2xl flex flex-col" style="height: 520px;">
+      <div class="bg-gradient-to-br from-blue-900/40 to-blue-800/40 text-white rounded-2xl shadow-lg backdrop-blur-lg border border-blue-900/40 flex flex-col overflow-hidden h-full">
 
-      <!-- Title -->
-      <div class="p-4 border-b border-blue-900/40">
-        <h2 class="text-xl font-bold text-center">🎤 Voice Chat with EduBot</h2>
-      </div>
+        <!-- Chat Header -->
+        <div class="p-4 border-b border-blue-900/40 flex items-center justify-between">
+          <h2 class="text-lg font-bold">🎤 Voice Chat with EduBot</h2>
+          <span id="statusDot" class="flex items-center gap-1.5 text-xs text-gray-400">
+            <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Online
+          </span>
+        </div>
 
-      <!-- Chat Area -->
-      <div id="chatArea" class="flex-grow overflow-y-auto bg-black/30 p-4 space-y-2 relative text-sm">
-        <div class="text-gray-400 text-center">Your conversation will appear here...</div>
-        <div id="typingIndicator" class="popup-indicator">Typing...</div>
-        <div id="voiceIndicator" class="popup-indicator bg-green-600">Listening...</div>
-      </div>
+        <!-- Chat Area -->
+        <div id="chatArea" class="flex-grow overflow-y-auto bg-black/30 p-4 relative">
+          <div class="msg-system">Ask me anything about COMSATS Attock Campus!</div>
+          <div style="position:absolute; bottom:8px; right:12px;">
+            <span id="typingIndicator" class="indicator bg-blue-700 text-white">Typing...</span>
+            <span id="voiceIndicator" class="indicator bg-green-600 text-white">Listening...</span>
+          </div>
+        </div>
 
-      <!-- Input Bar -->
-      <div class="flex items-center gap-2 p-3 bg-black/40 border-t border-blue-900/40">
-        <button id="voiceBtn" class="bg-blue-700 hover:bg-blue-800 text-white p-3 rounded-full shadow-lg">
-          🎙️
-        </button>
+        <!-- Suggested Questions -->
+        <div id="suggestionsBar" class="px-3 py-2 border-t border-blue-900/30 flex gap-2 overflow-x-auto">
+          <button onclick="useSuggestion('What courses are offered in CS?')" class="flex-shrink-0 text-xs bg-blue-900/60 border border-blue-700/50 text-blue-200 px-3 py-1.5 rounded-full hover:bg-blue-700 transition">📚 CS Courses</button>
+          <button onclick="useSuggestion('When are the exams?')" class="flex-shrink-0 text-xs bg-blue-900/60 border border-blue-700/50 text-blue-200 px-3 py-1.5 rounded-full hover:bg-blue-700 transition">📅 Exam Schedule</button>
+          <button onclick="useSuggestion('Tell me about scholarships available')" class="flex-shrink-0 text-xs bg-blue-900/60 border border-blue-700/50 text-blue-200 px-3 py-1.5 rounded-full hover:bg-blue-700 transition">🎓 Scholarships</button>
+          <button onclick="useSuggestion('How can I manage stress during exams?')" class="flex-shrink-0 text-xs bg-blue-900/60 border border-blue-700/50 text-blue-200 px-3 py-1.5 rounded-full hover:bg-blue-700 transition">🧠 Mental Health</button>
+          <button onclick="useSuggestion('What are the MS program requirements?')" class="flex-shrink-0 text-xs bg-blue-900/60 border border-blue-700/50 text-blue-200 px-3 py-1.5 rounded-full hover:bg-blue-700 transition">🔬 MS Programs</button>
+        </div>
 
-        <input id="textInput" type="text" placeholder="Type a message"
-          class="flex-grow px-4 py-2 rounded-full border border-blue-900/40 bg-black/40 
-                 text-white focus:outline-none" />
+        <!-- Input Bar -->
+        <div class="flex items-center gap-2 p-3 bg-black/40 border-t border-blue-900/40">
+          <button id="voiceBtn" title="Hold to speak (or click to toggle)"
+            class="bg-blue-700 hover:bg-blue-800 text-white p-3 rounded-full shadow-lg flex-shrink-0 transition">
+            🎙️
+          </button>
+          <input id="textInput" type="text" placeholder="Type a message or use the mic..."
+            class="flex-grow px-4 py-2 rounded-full border border-blue-900/40 bg-black/40 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 text-sm"/>
+          <button id="sendBtn"
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full shadow flex-shrink-0 font-medium transition text-sm">
+            ➤
+          </button>
+        </div>
 
-        <button id="sendBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full shadow">
-          ➤
-        </button>
       </div>
     </div>
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 
-                 py-4 text-center text-gray-200 text-sm rounded-3xl 
-                 mx-4 sm:mx-8 lg:mx-20 mb-6 backdrop-blur-md">
+  <footer class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 py-4 text-center text-gray-200 text-sm rounded-3xl mx-4 sm:mx-8 lg:mx-20 mb-6 backdrop-blur-md">
     For further queries contact <span class="font-medium text-white">edubotofficial@gmail.com</span>
   </footer>
 
-  <!-- JS -->
   <script>
-    // Auto-detect backend URL based on current hostname
-    // If accessed via IP (e.g., 192.168.43.95:3000), use same IP for backend (192.168.43.95:8000)
-    // Otherwise, default to localhost:8000
+    // ── Backend URL resolution ──────────────────────────────────────────────
     function getBackendURL() {
-      if (window.__EDUBOT_API_BASE_URL__) {
-        return window.__EDUBOT_API_BASE_URL__;
-      }
+      if (window.__EDUBOT_API_BASE_URL__) return window.__EDUBOT_API_BASE_URL__;
       const hostname = window.location.hostname;
-      // Replit proxy: derive backend URL from frontend URL
       if (hostname.includes('.replit.dev') || hostname.includes('.repl.co') || hostname.includes('.replit.app')) {
         return `https://${hostname.replace('-5000.', '-8000.')}`;
       }
-      // If hostname is an IP address or not localhost, use it for backend
       if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
         return `http://${hostname}:8000`;
       }
-      return "http://localhost:8000";
+      return 'http://localhost:8000';
     }
     const API_BASE_URL = getBackendURL();
-    console.log('Backend URL:', API_BASE_URL);
-    const voiceBtn = document.getElementById('voiceBtn');
-    const textInput = document.getElementById('textInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const chatArea = document.getElementById('chatArea');
-    const typingIndicator = document.getElementById('typingIndicator');
-    const voiceIndicator = document.getElementById('voiceIndicator');
-    const audioPlayer = new Audio();
-    let recognition;
-    let typingTimeout;
+    console.log('[EduBot] Backend URL:', API_BASE_URL);
 
-    async function sendQuestionToBackend(question) {
-      typingIndicator.style.display = "block";
-      addMessage("You", question);
+    // ── DOM refs ────────────────────────────────────────────────────────────
+    const voiceBtn         = document.getElementById('voiceBtn');
+    const textInput        = document.getElementById('textInput');
+    const sendBtn          = document.getElementById('sendBtn');
+    const chatArea         = document.getElementById('chatArea');
+    const typingIndicator  = document.getElementById('typingIndicator');
+    const voiceIndicator   = document.getElementById('voiceIndicator');
+    const suggestionsBar   = document.getElementById('suggestionsBar');
+    const audioPlayer      = new Audio();
+
+    // ── Chat helpers ────────────────────────────────────────────────────────
+    function addMessage(sender, text) {
+      const div = document.createElement('div');
+      if (sender === 'You') {
+        div.className = 'msg-user';
+        div.innerHTML = `<span>${escapeHtml(text)}</span>`;
+      } else if (sender === 'system') {
+        div.className = 'msg-system';
+        div.textContent = text;
+      } else {
+        div.className = 'msg-bot';
+        div.innerHTML = `<span>${escapeHtml(text)}</span>`;
+      }
+      chatArea.insertBefore(div, chatArea.querySelector('#typingIndicator')?.parentElement || null);
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    function escapeHtml(t) {
+      return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    }
+
+    function setTyping(on) { typingIndicator.style.display = on ? 'block' : 'none'; }
+    function setListening(on) {
+      voiceIndicator.style.display = on ? 'block' : 'none';
+      if (on) voiceBtn.classList.add('mic-active');
+      else     voiceBtn.classList.remove('mic-active');
+    }
+
+    function hideSuggestions() { suggestionsBar.style.display = 'none'; }
+
+    // ── API call ────────────────────────────────────────────────────────────
+    async function sendQuestion(question) {
+      if (!question.trim()) return;
+      hideSuggestions();
+      addMessage('You', question);
+      setTyping(true);
+      textInput.value = '';
+      textInput.disabled = true;
+      sendBtn.disabled = true;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch(`${API_BASE_URL}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question })
         });
-
-        const payload = await response.json();
-
-        if (!response.ok) {
-          const errorMessage = payload?.detail || "Unexpected error from server.";
-          addMessage("EduBot", `⚠️ ${errorMessage}`);
+        const data = await res.json();
+        if (!res.ok) {
+          addMessage('EduBot', '⚠️ ' + (data.detail || 'Something went wrong. Please try again.'));
           return;
         }
-
-        addMessage("EduBot", payload.answer || "I couldn't generate an answer right now.");
-
-        if (payload.audio_base64) {
-          playAudio(payload.audio_base64);
-        }
-      } catch (error) {
-        console.error("Failed to fetch from backend:", error);
-        addMessage("EduBot", "⚠️ Unable to reach the server. Please try again later.");
+        addMessage('EduBot', data.answer || "I couldn't generate an answer. Please try rephrasing.");
+        if (data.audio_base64) playAudio(data.audio_base64);
+      } catch (err) {
+        console.error(err);
+        addMessage('EduBot', '⚠️ Unable to reach the server. Please check your connection and try again.');
       } finally {
-        typingIndicator.style.display = "none";
+        setTyping(false);
+        textInput.disabled = false;
+        sendBtn.disabled = false;
+        textInput.focus();
       }
     }
 
-    function playAudio(base64Data) {
-      audioPlayer.src = `data:audio/mp3;base64,${base64Data}`;
-      audioPlayer.play().catch((err) => {
-        console.warn("Audio playback failed:", err);
-      });
+    function playAudio(b64) {
+      audioPlayer.src = `data:audio/mp3;base64,${b64}`;
+      audioPlayer.play().catch(e => console.warn('Audio blocked:', e));
     }
 
-    if ('webkitSpeechRecognition' in window) {
-      recognition = new webkitSpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = false;
-      recognition.lang = "en-US";
+    function useSuggestion(text) {
+      textInput.value = text;
+      sendQuestion(text);
+    }
 
-      recognition.onstart = () => { voiceIndicator.style.display = "block"; };
-      recognition.onend = () => { voiceIndicator.style.display = "none"; };
-      recognition.onresult = (event) => {
-        const transcript = event.results[event.results.length - 1][0].transcript;
-        sendQuestionToBackend(transcript);
+    // ── Send events ──────────────────────────────────────────────────────────
+    sendBtn.addEventListener('click', () => sendQuestion(textInput.value.trim()));
+    textInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); sendQuestion(textInput.value.trim()); }
+    });
+
+    // ── Keyboard shortcut: Ctrl+M toggle mic ────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.key === 'm') { e.preventDefault(); toggleMic(); }
+      if (e.key === 'Escape') stopMic();
+    });
+
+    // ── Voice (Web Speech API) ───────────────────────────────────────────────
+    let recognition = null;
+    let micOn = false;
+
+    function toggleMic() { micOn ? stopMic() : startMic(); }
+    function startMic() {
+      if (!recognition) return;
+      try { recognition.start(); } catch(e) {}
+    }
+    function stopMic() {
+      if (!recognition) return;
+      try { recognition.stop(); } catch(e) {}
+    }
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SR();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => { micOn = true; setListening(true); };
+      recognition.onend   = () => { micOn = false; setListening(false); };
+      recognition.onerror = (e) => { console.warn('Speech error:', e.error); micOn = false; setListening(false); };
+      recognition.onresult = (e) => {
+        const transcript = e.results[e.results.length - 1][0].transcript.trim();
+        if (transcript) sendQuestion(transcript);
       };
 
-      voiceBtn.addEventListener("mousedown", () => recognition.start());
-      voiceBtn.addEventListener("mouseup", () => recognition.stop());
-      voiceBtn.addEventListener("mouseleave", () => recognition.stop());
-      voiceBtn.addEventListener("touchstart", (e) => { e.preventDefault(); recognition.start(); });
-      voiceBtn.addEventListener("touchend", () => recognition.stop());
+      // Hold-to-speak
+      voiceBtn.addEventListener('mousedown', startMic);
+      voiceBtn.addEventListener('mouseup', stopMic);
+      voiceBtn.addEventListener('mouseleave', stopMic);
+      voiceBtn.addEventListener('touchstart', e => { e.preventDefault(); startMic(); });
+      voiceBtn.addEventListener('touchend', stopMic);
     } else {
-      voiceBtn.textContent = "No Mic";
+      voiceBtn.title = 'Speech recognition not supported in this browser';
+      voiceBtn.textContent = '🚫';
       voiceBtn.disabled = true;
-    }
-
-    textInput.addEventListener("input", () => {
-      typingIndicator.style.display = "block";
-      clearTimeout(typingTimeout);
-      typingTimeout = setTimeout(() => { typingIndicator.style.display = "none"; }, 1000);
-    });
-
-    sendBtn.addEventListener("click", () => {
-      const text = textInput.value.trim();
-      if (text) {
-        sendQuestionToBackend(text);
-        textInput.value = "";
-        typingIndicator.style.display = "none";
-      }
-    });
-
-    textInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        const text = textInput.value.trim();
-        if (text) {
-          sendQuestionToBackend(text);
-          textInput.value = "";
-        }
-      }
-    });
-
-    function addMessage(sender, text) {
-      const msg = document.createElement("div");
-      if (sender === "You") {
-        msg.className = "flex justify-end";
-        msg.innerHTML = `<span class="bg-blue-600 px-3 py-2 rounded-2xl max-w-xs break-words">${text}</span>`;
-      } else {
-        msg.className = "flex justify-start";
-        msg.innerHTML = `<span class="bg-gray-700 px-3 py-2 rounded-2xl max-w-xs break-words">${text}</span>`;
-      }
-      chatArea.appendChild(msg);
-      chatArea.scrollTop = chatArea.scrollHeight;
+      voiceBtn.classList.add('opacity-50', 'cursor-not-allowed');
     }
   </script>
 </body>

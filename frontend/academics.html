@@ -3,56 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduBot - Academic</title>
+  <title>EduBot - Academics</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-
   <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-    }
-    h1, h2, h3, h4, h5, h6, nav, button {
-      font-family: 'Poppins', sans-serif;
-    }
-         /* Background Image with Blur Overlay */
-    .welcome-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: url("background.png") no-repeat center center;
-      background-size: cover;
-      z-index: -1;
-      filter: blur(2px) brightness(0.7); /* blur + dark overlay */
-    }
+    body { font-family: 'Roboto', sans-serif; background-color: #000; }
+    h1,h2,h3,h4,h5,h6,nav,button { font-family: 'Poppins', sans-serif; }
+    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(37,99,235,0.25); }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:50; align-items:center; justify-content:center; padding:16px; }
+    .modal-overlay.active { display:flex; }
+    .modal-box { max-height:85vh; overflow-y:auto; }
+    .tab-btn { transition: background 0.2s, color 0.2s; }
+    .tab-btn.active { background:#1d4ed8; color:#fff; }
   </style>
 </head>
+<body class="min-h-screen flex flex-col text-white">
 
-<body class="bg-gradient-to-b from-gray-900 via-black to-gray-900 min-h-screen flex flex-col">
-   <!-- Blurred Background -->
-  <div class="welcome-bg"></div>
   <!-- HEADER -->
-  <header class="bg-gradient-to-r from-blue-900 via-black to-blue-900 shadow-lg rounded-3xl mt-6 mx-4 sm:mx-8 lg:mx-20">
+  <header class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 shadow-lg rounded-3xl mt-6 mx-4 sm:mx-8 lg:mx-20 backdrop-blur-md">
     <div class="container mx-auto flex flex-col items-center px-4 py-4">
-
-      <!-- Logo + Title -->
       <div class="flex flex-col items-center">
-        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white overflow-hidden shadow-lg">
-          <img src="COMSATS_new_logo-removebg-preview.png" alt="COMSATS Logo" class="w-full h-full object-cover" />
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white overflow-hidden shadow-lg border-4 border-white">
+          <img src="COMSATS_new_logo-removebg-preview.png" alt="COMSATS Logo" class="w-full h-full object-cover"/>
         </div>
-        <h1 class="text-center text-base sm:text-lg md:text-2xl font-bold text-white tracking-wide mt-3">
-          COMSATS UNIVERSITY ISLAMABAD, ATTOCK CAMPUS
-        </h1>
+        <h1 class="text-center text-base sm:text-lg md:text-2xl font-bold text-white tracking-wide mt-3">COMSATS UNIVERSITY ISLAMABAD, ATTOCK CAMPUS</h1>
       </div>
-
-      <!-- Navigation -->
       <nav class="mt-4 w-full overflow-x-auto">
         <ul class="flex flex-nowrap justify-center whitespace-nowrap gap-6 text-white font-medium bg-blue-950/70 rounded-xl px-6 py-2 shadow-md">
           <li><a href="welcomescreen.html" class="hover:text-blue-400 transition">Home</a></li>
           <li><a href="voicechat.html" class="hover:text-blue-400 transition">Voice Chat</a></li>
-          <li><a href="academics.html" class="hover:text-blue-400 transition">Academic</a></li>
+          <li><a href="academics.html" class="text-blue-400 font-semibold transition">Academics</a></li>
           <li><a href="faq.html" class="hover:text-blue-400 transition">FAQ</a></li>
         </ul>
       </nav>
@@ -60,90 +41,385 @@
   </header>
 
   <!-- MAIN -->
-  <main class="flex-grow flex items-center justify-center p-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl w-full">
-      
-      <!-- Card 1 -->
-      <a href="#" class="group bg-gradient-to-br from-blue-900/40 to-blue-800/40 hover:from-blue-800 hover:to-blue-700 text-white p-6 rounded-2xl shadow-lg backdrop-blur-lg border border-blue-900/40 transition transform hover:-translate-y-2">
-        <div class="flex items-center space-x-4">
-          <div class="bg-blue-600/40 p-3 rounded-xl group-hover:bg-blue-500/60 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.13L12 21l-6.825-4.292a12.083 12.083 0 01.665-6.13L12 14z" />
-            </svg>
-          </div>
-          <span class="font-semibold text-lg">Academic Support</span>
-        </div>
-      </a>
+  <main class="flex-grow p-6">
+    <div class="max-w-4xl mx-auto">
 
-      <!-- Card 2 -->
-      <a href="#" class="group bg-gradient-to-br from-gray-800/60 to-gray-700/60 hover:from-gray-700 hover:to-gray-600 text-white p-6 rounded-2xl shadow-lg backdrop-blur-lg border border-gray-700/50 transition transform hover:-translate-y-2">
-        <div class="flex items-center space-x-4">
-          <div class="bg-gray-600/40 p-3 rounded-xl group-hover:bg-gray-500/60 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 12c0 4.418-3.582 8-8 8s-8-3.582-8-8c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
-            </svg>
-          </div>
-          <span class="font-semibold text-lg">Administrative Help</span>
-        </div>
-      </a>
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-white">Academic Support Center</h2>
+        <p class="text-gray-400 text-sm mt-1">Select a category to explore resources and information</p>
+      </div>
 
-      <!-- Card 3 -->
-      <a href="#" class="group bg-gradient-to-br from-blue-900/40 to-blue-800/40 hover:from-blue-800 hover:to-blue-700 text-white p-6 rounded-2xl shadow-lg backdrop-blur-lg border border-blue-900/40 transition transform hover:-translate-y-2">
-        <div class="flex items-center space-x-4">
-          <div class="bg-blue-600/40 p-3 rounded-xl group-hover:bg-blue-500/60 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 010 7.292M15.535 8.465a4 4 0 01-5.657 5.657" />
-            </svg>
-          </div>
-          <span class="font-semibold text-lg">Mental Health Resources</span>
-        </div>
-      </a>
+      <!-- Grid of Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-      <!-- Card 4 -->
-      <a href="#" class="group bg-gradient-to-br from-gray-800/60 to-gray-700/60 hover:from-gray-700 hover:to-gray-600 text-white p-6 rounded-2xl shadow-lg backdrop-blur-lg border border-gray-700/50 transition transform hover:-translate-y-2">
-        <div class="flex items-center space-x-4">
-          <div class="bg-gray-600/40 p-3 rounded-xl group-hover:bg-gray-500/60 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0-1.105.895-2 2-2h6m-6 8h6m-6-4h6m-8-4h-2v10h2m0-10V7a2 2 0 10-4 0v4h4z" />
-            </svg>
+        <!-- Card 1: Academic Support -->
+        <div onclick="openModal('modal-academic')" class="card-hover cursor-pointer bg-gradient-to-br from-blue-900/50 to-blue-800/50 border border-blue-900/40 p-6 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center gap-4">
+            <div class="bg-blue-600/30 p-3 rounded-xl flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.13L12 21l-6.825-4.292a12.083 12.083 0 01.665-6.13L12 14z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-semibold text-lg text-white block">Academic Support</span>
+              <span class="text-gray-400 text-xs">Courses, timetables &amp; schedules</span>
+            </div>
           </div>
-          <span class="font-semibold text-lg">Career Guidance</span>
         </div>
-      </a>
 
-      <!-- Card 5 -->
-      <a href="#" class="group bg-gradient-to-br from-blue-900/40 to-blue-800/40 hover:from-blue-800 hover:to-blue-700 text-white p-6 rounded-2xl shadow-lg backdrop-blur-lg border border-blue-900/40 transition transform hover:-translate-y-2">
-        <div class="flex items-center space-x-4">
-          <div class="bg-blue-600/40 p-3 rounded-xl group-hover:bg-blue-500/60 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h8m-8 4h8m-8 4h6m6-9v12a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h7l5 5z" />
-            </svg>
+        <!-- Card 2: Administrative -->
+        <div onclick="openModal('modal-admin')" class="card-hover cursor-pointer bg-gradient-to-br from-gray-800/60 to-gray-700/60 border border-gray-700/50 p-6 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center gap-4">
+            <div class="bg-gray-600/30 p-3 rounded-xl flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-semibold text-lg text-white block">Administrative Help</span>
+              <span class="text-gray-400 text-xs">Admissions, fees &amp; policies</span>
+            </div>
           </div>
-          <span class="font-semibold text-lg">Campus Events</span>
         </div>
-      </a>
 
-      <!-- Card 6 -->
-      <a href="#" class="group bg-gradient-to-br from-gray-800/60 to-gray-700/60 hover:from-gray-700 hover:to-gray-600 text-white p-6 rounded-2xl shadow-lg backdrop-blur-lg border border-gray-700/50 transition transform hover:-translate-y-2">
-        <div class="flex items-center space-x-4">
-          <div class="bg-gray-600/40 p-3 rounded-xl group-hover:bg-gray-500/60 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 01-8 0V7a4 4 0 018 0v5z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19v2m-6 0h12" />
-            </svg>
+        <!-- Card 3: Mental Health -->
+        <div onclick="openModal('modal-mental')" class="card-hover cursor-pointer bg-gradient-to-br from-purple-900/50 to-purple-800/50 border border-purple-900/40 p-6 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center gap-4">
+            <div class="bg-purple-600/30 p-3 rounded-xl flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-semibold text-lg text-white block">Mental Health</span>
+              <span class="text-gray-400 text-xs">Wellness &amp; counseling resources</span>
+            </div>
           </div>
-          <span class="font-semibold text-lg">Contact Faculty/HoDs</span>
         </div>
-      </a>
 
+        <!-- Card 4: Graduate Programs -->
+        <div onclick="openModal('modal-grad')" class="card-hover cursor-pointer bg-gradient-to-br from-green-900/50 to-green-800/50 border border-green-900/40 p-6 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center gap-4">
+            <div class="bg-green-600/30 p-3 rounded-xl flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-semibold text-lg text-white block">Graduate Programs</span>
+              <span class="text-gray-400 text-xs">MS &amp; PhD guidance</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Campus Events -->
+        <div onclick="openModal('modal-events')" class="card-hover cursor-pointer bg-gradient-to-br from-yellow-900/50 to-yellow-800/50 border border-yellow-900/40 p-6 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center gap-4">
+            <div class="bg-yellow-600/30 p-3 rounded-xl flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-semibold text-lg text-white block">Campus Events</span>
+              <span class="text-gray-400 text-xs">Societies &amp; activities</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Faculty Contacts -->
+        <div onclick="openModal('modal-faculty')" class="card-hover cursor-pointer bg-gradient-to-br from-red-900/50 to-red-800/50 border border-red-900/40 p-6 rounded-2xl backdrop-blur-md">
+          <div class="flex items-center gap-4">
+            <div class="bg-red-600/30 p-3 rounded-xl flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-semibold text-lg text-white block">Faculty &amp; HoDs</span>
+              <span class="text-gray-400 text-xs">Contact information &amp; office hours</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Ask EduBot CTA -->
+      <div class="mt-8 text-center">
+        <p class="text-gray-400 text-sm mb-3">Need personalized help? Ask EduBot directly!</p>
+        <a href="voicechat.html" class="inline-block bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded-xl shadow-lg transition">🎤 Chat with EduBot</a>
+      </div>
     </div>
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-gradient-to-r from-blue-900 via-black to-blue-900 py-4 text-center text-gray-200 text-sm rounded-3xl mx-4 sm:mx-8 lg:mx-20 mb-6">
+  <footer class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 py-4 text-center text-gray-200 text-sm rounded-3xl mx-4 sm:mx-8 lg:mx-20 mb-6 backdrop-blur-md">
     For further queries contact <span class="font-medium text-white">edubotofficial@gmail.com</span>
   </footer>
+
+  <!-- ============ MODALS ============ -->
+
+  <!-- Modal: Academic Support -->
+  <div id="modal-academic" class="modal-overlay" onclick="closeModalOutside(event, 'modal-academic')">
+    <div class="modal-box w-full max-w-lg bg-gray-900 border border-blue-900/50 rounded-3xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-white">📚 Academic Support</h3>
+        <button onclick="closeModal('modal-academic')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+        <div class="bg-blue-900/30 rounded-xl p-4">
+          <h4 class="text-blue-300 font-semibold mb-2">Departments Offered</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>BS Computer Science (CS)</li>
+            <li>BS Software Engineering (SE)</li>
+            <li>BS Electrical Engineering (EE)</li>
+            <li>BS Business Administration (BBA)</li>
+            <li>BS Mathematics</li>
+            <li>BS Physics</li>
+          </ul>
+        </div>
+        <div class="bg-blue-900/30 rounded-xl p-4">
+          <h4 class="text-blue-300 font-semibold mb-2">Course Registration (FLEX Portal)</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>Log in at <span class="text-blue-400">flex.comsats.edu.pk</span></li>
+            <li>Course registration opens 2 weeks before semester start</li>
+            <li>Seek advisor approval for elective courses</li>
+            <li>Maximum 21 credit hours per semester (with dean's permission)</li>
+          </ul>
+        </div>
+        <div class="bg-blue-900/30 rounded-xl p-4">
+          <h4 class="text-blue-300 font-semibold mb-2">Attendance Policy</h4>
+          <p>Minimum 75% attendance required per course. Students falling below may not be allowed to sit in final exams.</p>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
+        <button onclick="closeModal('modal-academic')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Administrative Help -->
+  <div id="modal-admin" class="modal-overlay" onclick="closeModalOutside(event, 'modal-admin')">
+    <div class="modal-box w-full max-w-lg bg-gray-900 border border-gray-700/50 rounded-3xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-white">🏛️ Administrative Help</h3>
+        <button onclick="closeModal('modal-admin')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">Fee Structure</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>Tuition fee varies by program and credit hours</li>
+            <li>Fee is payable per semester at the start of each term</li>
+            <li>Late fee penalties apply after the due date</li>
+            <li>Contact the Finance Office for exact fee details</li>
+          </ul>
+        </div>
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">Important Offices</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li><strong class="text-white">Admission Office:</strong> Ground Floor, Admin Block</li>
+            <li><strong class="text-white">Finance Office:</strong> Admin Block, Room 102</li>
+            <li><strong class="text-white">Exam Department:</strong> Academic Block</li>
+            <li><strong class="text-white">Student Affairs:</strong> Student Center</li>
+          </ul>
+        </div>
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">Office Hours</h4>
+          <p>Monday – Friday: 8:00 AM to 4:00 PM</p>
+          <p class="mt-1">Saturday: 9:00 AM to 1:00 PM (Selected offices)</p>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
+        <button onclick="closeModal('modal-admin')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Mental Health -->
+  <div id="modal-mental" class="modal-overlay" onclick="closeModalOutside(event, 'modal-mental')">
+    <div class="modal-box w-full max-w-lg bg-gray-900 border border-purple-900/50 rounded-3xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-white">🧠 Mental Health &amp; Wellness</h3>
+        <button onclick="closeModal('modal-mental')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+        <div class="bg-purple-900/30 rounded-xl p-4">
+          <h4 class="text-purple-300 font-semibold mb-2">Campus Counseling Services</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>Confidential one-on-one counseling sessions available</li>
+            <li>Group wellness workshops and seminars</li>
+            <li>Academic stress management programs</li>
+            <li>Contact Student Affairs Office to book an appointment</li>
+          </ul>
+        </div>
+        <div class="bg-purple-900/30 rounded-xl p-4">
+          <h4 class="text-purple-300 font-semibold mb-2">💡 Daily Wellness Tips</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>Sleep 7–8 hours per night for optimal brain function</li>
+            <li>Take 5-minute breaks every 45 minutes of studying</li>
+            <li>Stay hydrated – drink at least 8 glasses of water daily</li>
+            <li>Exercise for 30 minutes at least 3 times a week</li>
+            <li>Practice deep breathing when feeling anxious</li>
+          </ul>
+        </div>
+        <div class="bg-purple-800/30 rounded-xl p-4 text-center">
+          <p class="text-purple-200 font-medium">💙 You are not alone. Asking for help is a sign of strength.</p>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Talk to EduBot</a>
+        <button onclick="closeModal('modal-mental')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Graduate Programs -->
+  <div id="modal-grad" class="modal-overlay" onclick="closeModalOutside(event, 'modal-grad')">
+    <div class="modal-box w-full max-w-lg bg-gray-900 border border-green-900/50 rounded-3xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-white">🔬 Graduate Programs</h3>
+        <button onclick="closeModal('modal-grad')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+        <div class="bg-green-900/30 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">MS Programs Available</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>MS Computer Science</li>
+            <li>MS Software Engineering</li>
+            <li>MS Electrical Engineering</li>
+            <li>MS Business Administration (MBA)</li>
+          </ul>
+        </div>
+        <div class="bg-green-900/30 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">MS Admission Requirements</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>BS degree with minimum 2.5 CGPA</li>
+            <li>Valid NTS-GAT (General) score</li>
+            <li>Statement of purpose letter</li>
+            <li>Two recommendation letters from faculty</li>
+          </ul>
+        </div>
+        <div class="bg-green-900/30 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">Research Opportunities</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>AI &amp; Machine Learning Lab</li>
+            <li>Software Engineering Research Group</li>
+            <li>Network &amp; Security Research Lab</li>
+            <li>HEC-funded research projects available</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
+        <button onclick="closeModal('modal-grad')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Campus Events -->
+  <div id="modal-events" class="modal-overlay" onclick="closeModalOutside(event, 'modal-events')">
+    <div class="modal-box w-full max-w-lg bg-gray-900 border border-yellow-900/50 rounded-3xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-white">📅 Campus Events &amp; Societies</h3>
+        <button onclick="closeModal('modal-events')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+        <div class="bg-yellow-900/30 rounded-xl p-4">
+          <h4 class="text-yellow-300 font-semibold mb-2">Active Student Societies</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>ACM Student Chapter (CS &amp; SE)</li>
+            <li>IEEE Student Branch (Electrical Engineering)</li>
+            <li>Literary &amp; Debating Society</li>
+            <li>Sports &amp; Recreation Club</li>
+            <li>Photography &amp; Arts Club</li>
+            <li>Entrepreneurship &amp; Startup Society</li>
+          </ul>
+        </div>
+        <div class="bg-yellow-900/30 rounded-xl p-4">
+          <h4 class="text-yellow-300 font-semibold mb-2">Annual Events</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>COMSATS Sports Week (Spring)</li>
+            <li>Tech Fest / Science Exhibition</li>
+            <li>Annual Cultural Gala</li>
+            <li>Convocation Ceremony</li>
+            <li>Career Fair &amp; Industry Expo</li>
+          </ul>
+        </div>
+        <div class="bg-yellow-900/30 rounded-xl p-4">
+          <h4 class="text-yellow-300 font-semibold mb-2">Facilities</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li>Sports complex with cricket and football grounds</li>
+            <li>Computer labs (24-hour access for enrolled students)</li>
+            <li>Library with digital resources and study halls</li>
+            <li>Cafeteria and student lounge</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
+        <button onclick="closeModal('modal-events')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Faculty Contacts -->
+  <div id="modal-faculty" class="modal-overlay" onclick="closeModalOutside(event, 'modal-faculty')">
+    <div class="modal-box w-full max-w-lg bg-gray-900 border border-red-900/50 rounded-3xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-white">👥 Faculty &amp; Department Contacts</h3>
+        <button onclick="closeModal('modal-faculty')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+        <div class="bg-red-900/30 rounded-xl p-4">
+          <h4 class="text-red-300 font-semibold mb-2">Department of Computer Science</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li><strong class="text-white">HoD:</strong> Dr. Zahoor ur Rehman</li>
+            <li><strong class="text-white">Email:</strong> cs.atk@comsats.edu.pk</li>
+            <li><strong class="text-white">Office:</strong> CS Block, Room 201</li>
+            <li><strong class="text-white">Hours:</strong> Mon–Fri, 9 AM–4 PM</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/30 rounded-xl p-4">
+          <h4 class="text-red-300 font-semibold mb-2">Key Administrative Contacts</h4>
+          <ul class="list-disc ml-4 space-y-1">
+            <li><strong class="text-white">Registrar:</strong> registrar.atk@comsats.edu.pk</li>
+            <li><strong class="text-white">Admission:</strong> admissions.atk@comsats.edu.pk</li>
+            <li><strong class="text-white">Library:</strong> library.atk@comsats.edu.pk</li>
+            <li><strong class="text-white">IT Support:</strong> itsupport.atk@comsats.edu.pk</li>
+          </ul>
+        </div>
+        <div class="bg-red-900/30 rounded-xl p-4">
+          <h4 class="text-red-300 font-semibold mb-2">Campus Address</h4>
+          <p>COMSATS University Islamabad,<br>Attock Campus,<br>Kamra Road, Attock, Punjab, Pakistan</p>
+          <p class="mt-2"><strong class="text-white">Phone:</strong> +92-57-9311040</p>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
+        <button onclick="closeModal('modal-faculty')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+    function closeModalOutside(event, id) {
+      if (event.target.id === id) closeModal(id);
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+      }
+    });
+  </script>
 </body>
 </html>
