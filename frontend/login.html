@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduBot - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #000; /* Solid Black Background */
+    }
+    h1, h2, h3, h4, h5, h6, nav, button {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="relative min-h-screen flex flex-col text-white">
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 shadow-lg rounded-3xl mt-6 mx-4 sm:mx-8 lg:mx-20">
+    <div class="container mx-auto flex flex-col items-center px-4 py-4">
+      <div class="flex flex-col items-center">
+        
+        <!-- Logo with white border -->
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white border-4 border-white overflow-hidden shadow-lg">
+          <img src="images__3_-removebg-preview.png" alt="COMSATS Logo" class="w-full h-full object-cover" />
+        </div>
+
+        <h1 class="text-center text-base sm:text-lg md:text-2xl font-bold text-white tracking-wide mt-3">
+          EduBot
+        </h1>
+
+        <!-- Mini subtitle in brackets -->
+        <p class="text-center text-xs sm:text-sm text-gray-300 mt-1">
+          (Your Smart Campus Assistant)
+        </p>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LOGIN CARD -->
+  <main class="flex-grow flex items-center justify-center p-6">
+    <div class="w-full max-w-md bg-gradient-to-br from-blue-900/50 to-blue-800/50 text-white p-10 rounded-3xl shadow-lg border border-blue-900/40">
+      
+      <h2 class="text-2xl font-bold text-center">Login</h2>
+      <p class="text-center text-gray-300 mb-6">Enter your credentials to continue</p>
+
+      <form id="loginForm" class="space-y-4">
+        
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-200">Email Address</label>
+          <input id="email" type="email" placeholder="Enter your email" required
+                 class="mt-1 w-full px-4 py-3 rounded-xl bg-white/90 text-gray-900 placeholder-gray-500 
+                        focus:ring-2 focus:ring-blue-500 outline-none shadow-md">
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-200">Password</label>
+          <input id="password" type="password" placeholder="Enter your password" required
+                 class="mt-1 w-full px-4 py-3 rounded-xl bg-white/90 text-gray-900 placeholder-gray-500 
+                        focus:ring-2 focus:ring-blue-500 outline-none shadow-md">
+        </div>
+
+        <!-- Forgot Password -->
+        <div class="text-right">
+          <a href="resetpassword.html" class="text-blue-400 hover:underline text-sm">Forgot Password?</a>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit"
+          class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition">
+          Login
+        </button>
+      </form>
+
+      <!-- OR Divider -->
+      <div class="flex items-center my-4">
+        <div class="flex-grow border-t border-gray-500"></div>
+        <span class="mx-2 text-gray-400">OR</span>
+        <div class="flex-grow border-t border-gray-500"></div>
+      </div>
+
+      <!-- Google Login Button -->
+      <div class="mt-2 flex justify-center">
+        <button onclick="handleGoogleLogin()" 
+          class="bg-white text-black px-6 py-3 rounded-xl shadow-lg hover:bg-gray-200 transition">
+          Continue with Google
+        </button>
+      </div>
+
+      <!-- Register Link -->
+      <p class="mt-6 text-center text-gray-300 text-sm">
+        Don’t have an account?
+        <a href="register.html" class="text-blue-400 hover:underline">Create one</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 py-4 text-center text-gray-200 text-sm rounded-3xl mx-4 sm:mx-8 lg:mx-20 mb-6">
+    For further queries contact <span class="font-medium text-white">edubotofficial@gmail.com</span>
+  </footer>
+
+  <!-- Firebase Login JS -->
+  <script type="module">
+    import { auth } from "./firebase.js";
+    import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } 
+    from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+    const loginForm = document.getElementById("loginForm");
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        localStorage.setItem("savedEmail", user.email);
+        localStorage.setItem("rememberMe", "true");
+        sessionStorage.setItem("fromLogin", "true");
+
+        window.location.href = "welcomescreen.html";
+      } catch (error) {
+        alert("Login Failed: " + error.message);
+      }
+    });
+
+    const googleProvider = new GoogleAuthProvider();
+    window.handleGoogleLogin = async function () {
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+
+        localStorage.setItem("savedEmail", user.email);
+        localStorage.setItem("savedName", user.displayName);
+        localStorage.setItem("rememberMe", "true");
+        sessionStorage.setItem("fromLogin", "true");
+
+        window.location.href = "welcomescreen.html";
+      } catch (error) {
+        alert("Google Sign-In Failed: " + error.message);
+      }
+    };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "edubot-integration",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EduBot frontend + backend integration for BLOOMZ voice assistant.",
+"scripts": {
+    "start": "concurrently \"npm run serve-backend\" \"npm run serve-frontend\"",
+    "serve-backend": "cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
+    "server-backend": "npm run serve-backend",
+    "serve-frontend": "http-server ./frontend -p 3000 -c-1",
+    "backend": "npm run serve-backend",
+    "frontend": "npm run serve-frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "http-server": "^14.1.1"
+  }
+}
+

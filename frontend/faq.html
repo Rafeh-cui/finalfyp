@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduBot - FAQ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6, nav, button {
+      font-family: 'Poppins', sans-serif;
+    }
+          /* Background Image with Blur Overlay */
+    .welcome-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("background.png") no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+      filter: blur(2px) brightness(0.7); /* blur + dark overlay */
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-b from-gray-900 via-black to-gray-900 min-h-screen flex flex-col">
+  <!-- Blurred Background -->
+  <div class="welcome-bg"></div>
+  <!-- HEADER -->
+  <header class="bg-gradient-to-r from-blue-900 via-black to-blue-900 shadow-lg rounded-3xl mt-6 mx-4 sm:mx-8 lg:mx-20">
+    <div class="container mx-auto flex flex-col items-center px-4 py-4">
+      <!-- Logo + Title -->
+      <div class="flex flex-col items-center">
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white overflow-hidden shadow-lg">
+          <img src="COMSATS_new_logo-removebg-preview.png" alt="COMSATS Logo" class="w-full h-full object-cover" />
+        </div>
+        <h1 class="text-center text-base sm:text-lg md:text-2xl font-bold text-white tracking-wide mt-3">
+          COMSATS UNIVERSITY ISLAMABAD, ATTOCK CAMPUS
+        </h1>
+      </div>
+      <!-- Navigation -->
+      <nav class="mt-4 w-full overflow-x-auto">
+        <ul class="flex flex-nowrap justify-center whitespace-nowrap gap-6 text-white font-medium bg-blue-950/70 rounded-xl px-6 py-2 shadow-md">
+          <li><a href="welcomescreen.html" class="hover:text-blue-400 transition">Home</a></li>
+          <li><a href="voicechat.html" class="hover:text-blue-400 transition">Voice Chat</a></li>
+          <li><a href="academics.html" class="hover:text-blue-400 transition">Academic</a></li>
+          <li><a href="faq.html" class="hover:text-blue-400 transition">FAQ</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="flex-grow flex items-center justify-center p-6">
+    <div class="bg-gradient-to-br from-blue-900/40 to-blue-800/40 text-white p-6 rounded-3xl shadow-lg backdrop-blur-lg border border-blue-900/40 relative flex flex-col h-[500px] w-full max-w-3xl">
+      <!-- Title -->
+      <div class="p-4 border-b border-blue-800/50 text-center">
+        <h2 class="text-lg font-semibold text-blue-300">EduBot FAQ</h2>
+      </div>
+
+      <!-- Chat Section -->
+      <div class="flex-1 overflow-y-auto p-6 space-y-6">
+        <!-- User Question -->
+        <div class="flex justify-end">
+          <div class="bg-gray-800/60 text-gray-200 p-4 rounded-lg max-w-md text-sm">
+            What is the deadline for thesis submission?
+          </div>
+        </div>
+
+        <!-- Bot Answer -->
+        <div class="flex justify-start">
+          <div class="bg-blue-900/70 text-blue-100 p-4 rounded-lg max-w-md text-sm shadow-md border border-blue-800/50">
+            <p>The thesis submission deadline is <span class="font-semibold text-blue-300">May 15</span>.</p>
+            <div class="pt-3">
+              <button class="bg-blue-600 text-white text-sm px-4 py-2 rounded-md hover:bg-blue-500 transition">
+                Learn More
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer CTA inside Card -->
+      <div class="p-4 border-t border-blue-800/50">
+        <button class="w-full flex items-center justify-between bg-gray-800/60 text-sm text-gray-200 py-3 px-4 rounded-lg hover:bg-gray-700 transition">
+          <span>Learn More</span>
+          <span>&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gradient-to-r from-blue-900 via-black to-blue-900 py-4 text-center text-gray-200 text-sm rounded-3xl mx-4 sm:mx-8 lg:mx-20 mb-6">
+    For further queries contact <span class="font-medium text-white">edubotofficial@gmail.com</span>
+  </footer>
+</body>
+</html>

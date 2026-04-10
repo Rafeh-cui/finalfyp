@@ -1,0 +1,11 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+transformers>=4.57.0
+tokenizers>=0.22.0
+torch==2.9.0
+sentencepiece>=0.2.0
+gTTS==2.5.4
+langdetect==1.0.9
+sentence-transformers==3.0.1
+accelerate>=1.11.0
+huggingface-hub>=0.34.0,<1.0
