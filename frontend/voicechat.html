@@ -31,6 +31,43 @@
     .mic-active { background: #16a34a !important; animation: pulse 1.2s infinite; }
     @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(22,163,74,0.5);} 50%{box-shadow:0 0 0 10px rgba(22,163,74,0);} }
 
+    #speakingBar {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(30,64,175,0.3);
+      border-top: 1px solid rgba(59,130,246,0.2);
+      font-size: 12px;
+      color: #93c5fd;
+    }
+    #speakingBar.visible { display: flex; }
+
+    .wave-dots span {
+      display: inline-block;
+      width: 5px; height: 5px;
+      background: #60a5fa;
+      border-radius: 50%;
+      margin: 0 1px;
+      animation: waveDot 1.2s infinite ease-in-out;
+    }
+    .wave-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .wave-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes waveDot { 0%,80%,100%{transform:scale(0.6);opacity:0.4;} 40%{transform:scale(1.2);opacity:1;} }
+
+    #stopAudioBtn {
+      background: rgba(239,68,68,0.2);
+      border: 1px solid rgba(239,68,68,0.5);
+      color: #fca5a5;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-left: auto;
+    }
+    #stopAudioBtn:hover { background: rgba(239,68,68,0.4); }
+
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
@@ -82,6 +119,13 @@
           </div>
         </div>
 
+        <!-- Speaking indicator bar -->
+        <div id="speakingBar">
+          <div class="wave-dots"><span></span><span></span><span></span></div>
+          <span>EduBot is speaking...</span>
+          <button id="stopAudioBtn" onclick="stopAudio()">⏹ Stop</button>
+        </div>
+
         <!-- Suggested Questions -->
         <div id="suggestionsBar" class="px-3 py-2 border-t border-blue-900/30 flex gap-2 overflow-x-auto">
           <button onclick="useSuggestion('What courses are offered in CS?')" class="flex-shrink-0 text-xs bg-blue-900/60 border border-blue-700/50 text-blue-200 px-3 py-1.5 rounded-full hover:bg-blue-700 transition">📚 CS Courses</button>
@@ -115,20 +159,50 @@
   </footer>
 
   <script>
-    // API is served by the same server as the frontend — use relative URL
     const API_BASE_URL = '';
 
-    // ── DOM refs ────────────────────────────────────────────────────────────
-    const voiceBtn         = document.getElementById('voiceBtn');
-    const textInput        = document.getElementById('textInput');
-    const sendBtn          = document.getElementById('sendBtn');
-    const chatArea         = document.getElementById('chatArea');
-    const typingIndicator  = document.getElementById('typingIndicator');
-    const voiceIndicator   = document.getElementById('voiceIndicator');
-    const suggestionsBar   = document.getElementById('suggestionsBar');
-    const audioPlayer      = new Audio();
+    // ── DOM refs ─────────────────────────────────────────────────────────────
+    const voiceBtn        = document.getElementById('voiceBtn');
+    const textInput       = document.getElementById('textInput');
+    const sendBtn         = document.getElementById('sendBtn');
+    const chatArea        = document.getElementById('chatArea');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const voiceIndicator  = document.getElementById('voiceIndicator');
+    const suggestionsBar  = document.getElementById('suggestionsBar');
+    const speakingBar     = document.getElementById('speakingBar');
 
-    // ── Chat helpers ────────────────────────────────────────────────────────
+    // ── Audio player ──────────────────────────────────────────────────────────
+    const audioPlayer = new Audio();
+
+    audioPlayer.addEventListener('play',  () => speakingBar.classList.add('visible'));
+    audioPlayer.addEventListener('ended', () => speakingBar.classList.remove('visible'));
+    audioPlayer.addEventListener('pause', () => speakingBar.classList.remove('visible'));
+    audioPlayer.addEventListener('error', () => speakingBar.classList.remove('visible'));
+
+    function stopAudio() {
+      if (!audioPlayer.paused) {
+        audioPlayer.pause();
+      }
+      audioPlayer.currentTime = 0;
+      audioPlayer.src = '';
+      speakingBar.classList.remove('visible');
+    }
+
+    function playAudio(b64) {
+      stopAudio(); // Always stop current audio before starting new
+      audioPlayer.src = `data:audio/mp3;base64,${b64}`;
+      audioPlayer.play().catch(e => {
+        console.warn('Audio playback blocked:', e);
+        speakingBar.classList.remove('visible');
+      });
+    }
+
+    // ── Stop audio when user starts typing ───────────────────────────────────
+    textInput.addEventListener('input', () => {
+      if (textInput.value.length > 0 && !audioPlayer.paused) stopAudio();
+    });
+
+    // ── Chat helpers ──────────────────────────────────────────────────────────
     function addMessage(sender, text) {
       const div = document.createElement('div');
       if (sender === 'You') {
@@ -149,18 +223,19 @@
       return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
     }
 
-    function setTyping(on) { typingIndicator.style.display = on ? 'block' : 'none'; }
+    function setTyping(on)    { typingIndicator.style.display = on ? 'block' : 'none'; }
     function setListening(on) {
       voiceIndicator.style.display = on ? 'block' : 'none';
       if (on) voiceBtn.classList.add('mic-active');
-      else     voiceBtn.classList.remove('mic-active');
+      else    voiceBtn.classList.remove('mic-active');
     }
-
     function hideSuggestions() { suggestionsBar.style.display = 'none'; }
 
-    // ── API call ────────────────────────────────────────────────────────────
+    // ── API call ──────────────────────────────────────────────────────────────
     async function sendQuestion(question) {
       if (!question.trim()) return;
+
+      stopAudio();            // Stop any ongoing speech immediately
       hideSuggestions();
       addMessage('You', question);
       setTyping(true);
@@ -169,10 +244,10 @@
       sendBtn.disabled = true;
 
       try {
-        const res = await fetch(`${API_BASE_URL}/api/chat`, {
-          method: 'POST',
+        const res  = await fetch(`${API_BASE_URL}/api/chat`, {
+          method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question })
+          body:    JSON.stringify({ question }),
         });
         const data = await res.json();
         if (!res.ok) {
@@ -192,63 +267,62 @@
       }
     }
 
-    function playAudio(b64) {
-      audioPlayer.src = `data:audio/mp3;base64,${b64}`;
-      audioPlayer.play().catch(e => console.warn('Audio blocked:', e));
-    }
-
     function useSuggestion(text) {
+      stopAudio();
       textInput.value = text;
       sendQuestion(text);
     }
 
-    // ── Send events ──────────────────────────────────────────────────────────
+    // ── Send events ───────────────────────────────────────────────────────────
     sendBtn.addEventListener('click', () => sendQuestion(textInput.value.trim()));
     textInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') { e.preventDefault(); sendQuestion(textInput.value.trim()); }
     });
 
-    // ── Keyboard shortcut: Ctrl+M toggle mic ────────────────────────────────
+    // ── Keyboard shortcuts ────────────────────────────────────────────────────
     document.addEventListener('keydown', e => {
       if (e.ctrlKey && e.key === 'm') { e.preventDefault(); toggleMic(); }
-      if (e.key === 'Escape') stopMic();
+      if (e.key === 'Escape') { stopMic(); stopAudio(); }
     });
 
-    // ── Voice (Web Speech API) ───────────────────────────────────────────────
+    // ── Voice (Web Speech API) ────────────────────────────────────────────────
     let recognition = null;
     let micOn = false;
 
     function toggleMic() { micOn ? stopMic() : startMic(); }
+
     function startMic() {
       if (!recognition) return;
+      stopAudio(); // Stop speaking before listening
       try { recognition.start(); } catch(e) {}
     }
+
     function stopMic() {
       if (!recognition) return;
       try { recognition.stop(); } catch(e) {}
     }
 
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const SR  = window.SpeechRecognition || window.webkitSpeechRecognition;
       recognition = new SR();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
+      recognition.continuous      = false;
+      recognition.interimResults  = false;
+      recognition.lang            = 'en-US';
 
-      recognition.onstart = () => { micOn = true; setListening(true); };
-      recognition.onend   = () => { micOn = false; setListening(false); };
-      recognition.onerror = (e) => { console.warn('Speech error:', e.error); micOn = false; setListening(false); };
-      recognition.onresult = (e) => {
+      recognition.onstart  = () => { micOn = true;  setListening(true); };
+      recognition.onend    = () => { micOn = false; setListening(false); };
+      recognition.onerror  = e  => { console.warn('Speech error:', e.error); micOn = false; setListening(false); };
+      recognition.onresult = e  => {
         const transcript = e.results[e.results.length - 1][0].transcript.trim();
         if (transcript) sendQuestion(transcript);
       };
 
-      // Hold-to-speak
-      voiceBtn.addEventListener('mousedown', startMic);
-      voiceBtn.addEventListener('mouseup', stopMic);
-      voiceBtn.addEventListener('mouseleave', stopMic);
-      voiceBtn.addEventListener('touchstart', e => { e.preventDefault(); startMic(); });
-      voiceBtn.addEventListener('touchend', stopMic);
+      // Hold-to-speak (desktop + mobile)
+      voiceBtn.addEventListener('mousedown',  ()  => startMic());
+      voiceBtn.addEventListener('mouseup',    ()  => stopMic());
+      voiceBtn.addEventListener('mouseleave', ()  => stopMic());
+      voiceBtn.addEventListener('touchstart', e   => { e.preventDefault(); startMic(); });
+      voiceBtn.addEventListener('touchend',   ()  => stopMic());
     } else {
       voiceBtn.title = 'Speech recognition not supported in this browser';
       voiceBtn.textContent = '🚫';
