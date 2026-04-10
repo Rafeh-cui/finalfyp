@@ -9,13 +9,39 @@
   <style>
     body { font-family: 'Roboto', sans-serif; background-color: #000; }
     h1,h2,h3,h4,h5,h6,nav,button { font-family: 'Poppins', sans-serif; }
-    .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(37,99,235,0.25); }
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:50; align-items:center; justify-content:center; padding:16px; }
+
+    .card-hover { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+    .card-hover:hover { transform: translateY(-5px); box-shadow: 0 14px 32px rgba(37,99,235,0.28); }
+
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.82); z-index:50; align-items:center; justify-content:center; padding:16px; backdrop-filter: blur(4px); }
     .modal-overlay.active { display:flex; }
-    .modal-box { max-height:85vh; overflow-y:auto; }
-    .tab-btn { transition: background 0.2s, color 0.2s; }
-    .tab-btn.active { background:#1d4ed8; color:#fff; }
+    .modal-box { max-height:88vh; overflow-y:auto; scrollbar-width: thin; scrollbar-color: #334155 transparent; }
+    .modal-box::-webkit-scrollbar { width: 4px; }
+    .modal-box::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+    .tab-btn { transition: background 0.18s, color 0.18s; border-bottom: 2px solid transparent; }
+    .tab-btn.active { border-bottom-color: #3b82f6; color: #60a5fa; font-weight: 600; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .badge { display:inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .stat-card { background: rgba(30,41,59,0.6); border: 1px solid rgba(71,85,105,0.4); border-radius: 16px; padding: 14px 18px; text-align: center; }
+
+    .info-row { display:flex; align-items:flex-start; gap:8px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: #94a3b8; font-size: 12px; min-width: 90px; flex-shrink: 0; padding-top: 1px; }
+    .info-value { color: #e2e8f0; font-size: 13px; }
+
+    .timeline-item { display:flex; gap:12px; padding-bottom: 16px; position: relative; }
+    .timeline-item::before { content:''; position:absolute; left:15px; top:28px; bottom:0; width:2px; background: rgba(59,130,246,0.25); }
+    .timeline-item:last-child::before { display:none; }
+    .timeline-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:13px; }
+
+    .grade-row { display:grid; grid-template-columns: 60px 60px 1fr; gap:8px; align-items:center; padding:6px 8px; border-radius:8px; font-size:13px; }
+    .grade-row:nth-child(even) { background: rgba(255,255,255,0.03); }
+
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+    .modal-box { animation: fadeIn 0.2s ease; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col text-white">
@@ -41,15 +67,35 @@
   </header>
 
   <!-- MAIN -->
-  <main class="flex-grow p-6">
+  <main class="flex-grow p-4 sm:p-6">
     <div class="max-w-4xl mx-auto">
 
-      <div class="text-center mb-6">
+      <div class="text-center mb-5">
         <h2 class="text-2xl font-bold text-white">Academic Support Center</h2>
-        <p class="text-gray-400 text-sm mt-1">Select a category to explore resources and information</p>
+        <p class="text-gray-400 text-sm mt-1">Everything you need to know about COMSATS Attock Campus</p>
       </div>
 
-      <!-- Grid of Cards -->
+      <!-- Quick Stats Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div class="stat-card">
+          <div class="text-2xl font-bold text-blue-400">4</div>
+          <div class="text-xs text-gray-400 mt-1">Departments</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-2xl font-bold text-green-400">10+</div>
+          <div class="text-xs text-gray-400 mt-1">Degree Programs</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-2xl font-bold text-purple-400">6</div>
+          <div class="text-xs text-gray-400 mt-1">Student Societies</div>
+        </div>
+        <div class="stat-card">
+          <div class="text-2xl font-bold text-yellow-400">2</div>
+          <div class="text-xs text-gray-400 mt-1">Semesters / Year</div>
+        </div>
+      </div>
+
+      <!-- Cards Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
         <!-- Card 1: Academic Support -->
@@ -63,7 +109,7 @@
             </div>
             <div>
               <span class="font-semibold text-lg text-white block">Academic Support</span>
-              <span class="text-gray-400 text-xs">Courses, timetables &amp; schedules</span>
+              <span class="text-gray-400 text-xs">Programs, grading &amp; registration</span>
             </div>
           </div>
         </div>
@@ -78,7 +124,7 @@
             </div>
             <div>
               <span class="font-semibold text-lg text-white block">Administrative Help</span>
-              <span class="text-gray-400 text-xs">Admissions, fees &amp; policies</span>
+              <span class="text-gray-400 text-xs">Admissions, fees &amp; scholarships</span>
             </div>
           </div>
         </div>
@@ -93,7 +139,7 @@
             </div>
             <div>
               <span class="font-semibold text-lg text-white block">Mental Health</span>
-              <span class="text-gray-400 text-xs">Wellness &amp; counseling resources</span>
+              <span class="text-gray-400 text-xs">Wellness, counseling &amp; tips</span>
             </div>
           </div>
         </div>
@@ -108,7 +154,7 @@
             </div>
             <div>
               <span class="font-semibold text-lg text-white block">Graduate Programs</span>
-              <span class="text-gray-400 text-xs">MS &amp; PhD guidance</span>
+              <span class="text-gray-400 text-xs">MS &amp; PhD — requirements &amp; research</span>
             </div>
           </div>
         </div>
@@ -123,7 +169,7 @@
             </div>
             <div>
               <span class="font-semibold text-lg text-white block">Campus Events</span>
-              <span class="text-gray-400 text-xs">Societies &amp; activities</span>
+              <span class="text-gray-400 text-xs">Societies, activities &amp; facilities</span>
             </div>
           </div>
         </div>
@@ -138,7 +184,7 @@
             </div>
             <div>
               <span class="font-semibold text-lg text-white block">Faculty &amp; HoDs</span>
-              <span class="text-gray-400 text-xs">Contact information &amp; office hours</span>
+              <span class="text-gray-400 text-xs">Department contacts &amp; offices</span>
             </div>
           </div>
         </div>
@@ -158,41 +204,189 @@
     For further queries contact <span class="font-medium text-white">edubotofficial@gmail.com</span>
   </footer>
 
-  <!-- ============ MODALS ============ -->
+  <!-- ============================================================ MODALS ============================================================ -->
 
-  <!-- Modal: Academic Support -->
-  <div id="modal-academic" class="modal-overlay" onclick="closeModalOutside(event, 'modal-academic')">
-    <div class="modal-box w-full max-w-lg bg-gray-900 border border-blue-900/50 rounded-3xl p-6 shadow-2xl">
+  <!-- ── Modal: Academic Support ── -->
+  <div id="modal-academic" class="modal-overlay" onclick="closeModalOutside(event,'modal-academic')">
+    <div class="modal-box w-full max-w-xl bg-gray-900 border border-blue-900/50 rounded-3xl p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold text-white">📚 Academic Support</h3>
         <button onclick="closeModal('modal-academic')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
       </div>
-      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+
+      <!-- Tabs -->
+      <div class="flex gap-0 border-b border-gray-700 mb-4 text-sm">
+        <button class="tab-btn active px-4 py-2 text-gray-300" onclick="switchTab(event,'acad','programs')">Programs</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'acad','grading')">Grading</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'acad','registration')">Registration</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'acad','calendar')">Calendar</button>
+      </div>
+
+      <!-- Tab: Programs -->
+      <div id="acad-programs" class="tab-panel active space-y-3 text-gray-300 text-sm">
         <div class="bg-blue-900/30 rounded-xl p-4">
-          <h4 class="text-blue-300 font-semibold mb-2">Departments Offered</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>BS Computer Science (CS)</li>
-            <li>BS Software Engineering (SE)</li>
-            <li>BS Electrical Engineering (EE)</li>
-            <li>BS Business Administration (BBA)</li>
-            <li>BS Mathematics</li>
-            <li>BS Physics</li>
-          </ul>
+          <h4 class="text-blue-300 font-semibold mb-3">Undergraduate Programs (BS — 4 years / 8 semesters)</h4>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>🖥️ BS Computer Science</span>
+              <span class="badge bg-blue-800 text-blue-200">130 Cr.Hr</span>
+            </div>
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>⚙️ BS Software Engineering</span>
+              <span class="badge bg-blue-800 text-blue-200">130 Cr.Hr</span>
+            </div>
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>⚡ BS Electrical Engineering</span>
+              <span class="badge bg-blue-800 text-blue-200">136 Cr.Hr</span>
+            </div>
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>💼 BBA (Business Administration)</span>
+              <span class="badge bg-blue-800 text-blue-200">132 Cr.Hr</span>
+            </div>
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>➗ BS Mathematics</span>
+              <span class="badge bg-blue-800 text-blue-200">126 Cr.Hr</span>
+            </div>
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>🔬 BS Physics</span>
+              <span class="badge bg-blue-800 text-blue-200">126 Cr.Hr</span>
+            </div>
+          </div>
         </div>
-        <div class="bg-blue-900/30 rounded-xl p-4">
-          <h4 class="text-blue-300 font-semibold mb-2">Course Registration (FLEX Portal)</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>Log in at <span class="text-blue-400">flex.comsats.edu.pk</span></li>
-            <li>Course registration opens 2 weeks before semester start</li>
-            <li>Seek advisor approval for elective courses</li>
-            <li>Maximum 21 credit hours per semester (with dean's permission)</li>
-          </ul>
-        </div>
-        <div class="bg-blue-900/30 rounded-xl p-4">
+        <div class="bg-blue-900/20 rounded-xl p-4">
           <h4 class="text-blue-300 font-semibold mb-2">Attendance Policy</h4>
-          <p>Minimum 75% attendance required per course. Students falling below may not be allowed to sit in final exams.</p>
+          <p>Minimum <strong class="text-white">75% attendance</strong> is required in every course. Falling below this threshold bars you from sitting in the final exam. Medical leaves require documentation submitted within 48 hours.</p>
+        </div>
+        <div class="bg-blue-900/20 rounded-xl p-4">
+          <h4 class="text-blue-300 font-semibold mb-2">Credit Hours</h4>
+          <ul class="space-y-1">
+            <li>Standard load: <strong class="text-white">15–18 credit hours</strong> per semester</li>
+            <li>Maximum (Dean's permission): <strong class="text-white">21 credit hours</strong></li>
+            <li>Minimum to stay enrolled: <strong class="text-white">9 credit hours</strong></li>
+          </ul>
         </div>
       </div>
+
+      <!-- Tab: Grading -->
+      <div id="acad-grading" class="tab-panel text-gray-300 text-sm">
+        <div class="bg-blue-900/30 rounded-xl p-4 mb-3">
+          <h4 class="text-blue-300 font-semibold mb-3">Grading Scale — COMSATS Standard</h4>
+          <div class="grade-row font-semibold text-gray-400 text-xs uppercase mb-1">
+            <div>Grade</div><div>GPA</div><div>Marks Range</div>
+          </div>
+          <div class="grade-row"><div class="text-green-400 font-bold">A</div><div>4.0</div><div>85 – 100%</div></div>
+          <div class="grade-row"><div class="text-green-300 font-bold">A-</div><div>3.7</div><div>80 – 84%</div></div>
+          <div class="grade-row"><div class="text-blue-400 font-bold">B+</div><div>3.3</div><div>75 – 79%</div></div>
+          <div class="grade-row"><div class="text-blue-300 font-bold">B</div><div>3.0</div><div>70 – 74%</div></div>
+          <div class="grade-row"><div class="text-blue-200 font-bold">B-</div><div>2.7</div><div>65 – 69%</div></div>
+          <div class="grade-row"><div class="text-yellow-400 font-bold">C+</div><div>2.3</div><div>60 – 64%</div></div>
+          <div class="grade-row"><div class="text-yellow-300 font-bold">C</div><div>2.0</div><div>55 – 59%</div></div>
+          <div class="grade-row"><div class="text-yellow-200 font-bold">C-</div><div>1.7</div><div>50 – 54%</div></div>
+          <div class="grade-row"><div class="text-red-400 font-bold">D</div><div>1.0</div><div>45 – 49%</div></div>
+          <div class="grade-row"><div class="text-red-500 font-bold">F</div><div>0.0</div><div>Below 45%</div></div>
+        </div>
+        <div class="bg-blue-900/20 rounded-xl p-4 mb-3">
+          <h4 class="text-blue-300 font-semibold mb-2">Marks Distribution (Typical)</h4>
+          <div class="space-y-1">
+            <div class="flex justify-between"><span>Midterm Exam</span><span class="text-white font-semibold">30%</span></div>
+            <div class="flex justify-between"><span>Final Exam</span><span class="text-white font-semibold">40%</span></div>
+            <div class="flex justify-between"><span>Assignments / Quizzes</span><span class="text-white font-semibold">20%</span></div>
+            <div class="flex justify-between"><span>Lab / Project</span><span class="text-white font-semibold">10%</span></div>
+          </div>
+        </div>
+        <div class="bg-blue-900/20 rounded-xl p-4">
+          <h4 class="text-blue-300 font-semibold mb-2">Academic Standing</h4>
+          <ul class="space-y-1">
+            <li>Good Standing: CGPA ≥ <strong class="text-white">2.0</strong></li>
+            <li>Probation: CGPA <strong class="text-white">1.5 – 1.99</strong> for one semester</li>
+            <li>Dismissal risk: CGPA below <strong class="text-white">1.5</strong> consecutively</li>
+            <li>Dean's List: Semester GPA ≥ <strong class="text-white">3.5</strong> with full load</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tab: Registration -->
+      <div id="acad-registration" class="tab-panel text-gray-300 text-sm space-y-3">
+        <div class="bg-blue-900/30 rounded-xl p-4">
+          <h4 class="text-blue-300 font-semibold mb-2">FLEX Portal — Student Self Service</h4>
+          <p class="mb-2">All academic transactions go through <strong class="text-blue-300">flex.comsats.edu.pk</strong></p>
+          <ul class="space-y-1">
+            <li>✅ Course registration &amp; add/drop</li>
+            <li>✅ View grades &amp; transcript</li>
+            <li>✅ Fee voucher download</li>
+            <li>✅ Timetable &amp; exam schedule</li>
+            <li>✅ Attendance record per course</li>
+            <li>✅ Course withdrawal requests</li>
+          </ul>
+        </div>
+        <div class="bg-blue-900/20 rounded-xl p-4">
+          <h4 class="text-blue-300 font-semibold mb-2">Registration Timeline</h4>
+          <ul class="space-y-1">
+            <li>Registration opens: <strong class="text-white">2 weeks before semester start</strong></li>
+            <li>Add/Drop period: <strong class="text-white">First 2 weeks of semester</strong></li>
+            <li>Course withdrawal (W grade): <strong class="text-white">Up to week 8</strong></li>
+            <li>Late registration penalty: <strong class="text-white">Rs 500 per course/day</strong></li>
+          </ul>
+        </div>
+        <div class="bg-blue-900/20 rounded-xl p-4">
+          <h4 class="text-blue-300 font-semibold mb-2">Repeater / Improvement Policy</h4>
+          <ul class="space-y-1">
+            <li>F grade courses must be repeated in the next offered semester</li>
+            <li>D grade courses can be improved once for better GPA</li>
+            <li>Repeater students attend regular classes with batch</li>
+            <li>Max 2 repetitions of a failed course allowed</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tab: Calendar -->
+      <div id="acad-calendar" class="tab-panel text-gray-300 text-sm">
+        <div class="space-y-0">
+          <div class="timeline-item">
+            <div class="timeline-dot bg-blue-600/30 text-blue-300">🍂</div>
+            <div>
+              <div class="font-semibold text-white">Fall Semester</div>
+              <div class="text-xs text-gray-400">September – January</div>
+              <div class="mt-1 text-xs space-y-0.5">
+                <div>Registration: <span class="text-gray-300">Mid-August</span></div>
+                <div>Classes begin: <span class="text-gray-300">1st week of September</span></div>
+                <div>Midterm exams: <span class="text-gray-300">October / November</span></div>
+                <div>Final exams: <span class="text-gray-300">January</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot bg-green-600/30 text-green-300">🌱</div>
+            <div>
+              <div class="font-semibold text-white">Spring Semester</div>
+              <div class="text-xs text-gray-400">February – June</div>
+              <div class="mt-1 text-xs space-y-0.5">
+                <div>Registration: <span class="text-gray-300">Mid-January</span></div>
+                <div>Classes begin: <span class="text-gray-300">1st week of February</span></div>
+                <div>Midterm exams: <span class="text-gray-300">March / April</span></div>
+                <div>Final exams: <span class="text-gray-300">May / June</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot bg-yellow-600/30 text-yellow-300">☀️</div>
+            <div>
+              <div class="font-semibold text-white">Summer Session (Optional)</div>
+              <div class="text-xs text-gray-400">July – August</div>
+              <div class="mt-1 text-xs">Condensed 8-week session. Max 9 credit hours. Only offered for select courses with sufficient enrollment.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot bg-purple-600/30 text-purple-300">🎓</div>
+            <div>
+              <div class="font-semibold text-white">Convocation</div>
+              <div class="text-xs text-gray-400">Usually in November</div>
+              <div class="mt-1 text-xs">Annual degree-awarding ceremony for graduates of all programs. Attendance with gown required.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="mt-5 flex gap-3">
         <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
         <button onclick="closeModal('modal-academic')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
@@ -200,38 +394,127 @@
     </div>
   </div>
 
-  <!-- Modal: Administrative Help -->
-  <div id="modal-admin" class="modal-overlay" onclick="closeModalOutside(event, 'modal-admin')">
-    <div class="modal-box w-full max-w-lg bg-gray-900 border border-gray-700/50 rounded-3xl p-6 shadow-2xl">
+  <!-- ── Modal: Administrative Help ── -->
+  <div id="modal-admin" class="modal-overlay" onclick="closeModalOutside(event,'modal-admin')">
+    <div class="modal-box w-full max-w-xl bg-gray-900 border border-gray-700/50 rounded-3xl p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold text-white">🏛️ Administrative Help</h3>
         <button onclick="closeModal('modal-admin')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
       </div>
-      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+
+      <div class="flex gap-0 border-b border-gray-700 mb-4 text-sm">
+        <button class="tab-btn active px-4 py-2 text-gray-300" onclick="switchTab(event,'adm','fees')">Fees</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'adm','admissions')">Admissions</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'adm','scholarships')">Scholarships</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'adm','offices')">Offices</button>
+      </div>
+
+      <!-- Tab: Fees -->
+      <div id="adm-fees" class="tab-panel active text-gray-300 text-sm space-y-3">
         <div class="bg-gray-800/60 rounded-xl p-4">
-          <h4 class="text-gray-200 font-semibold mb-2">Fee Structure</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>Tuition fee varies by program and credit hours</li>
-            <li>Fee is payable per semester at the start of each term</li>
-            <li>Late fee penalties apply after the due date</li>
-            <li>Contact the Finance Office for exact fee details</li>
+          <h4 class="text-gray-200 font-semibold mb-2">Typical Semester Fees (Approximate)</h4>
+          <div class="space-y-2">
+            <div class="flex justify-between bg-black/20 rounded-lg px-3 py-2"><span>BS CS / SE</span><span class="text-white font-semibold">Rs 38,000 – 45,000</span></div>
+            <div class="flex justify-between bg-black/20 rounded-lg px-3 py-2"><span>BS Electrical Engineering</span><span class="text-white font-semibold">Rs 40,000 – 48,000</span></div>
+            <div class="flex justify-between bg-black/20 rounded-lg px-3 py-2"><span>BBA / Management</span><span class="text-white font-semibold">Rs 35,000 – 40,000</span></div>
+            <div class="flex justify-between bg-black/20 rounded-lg px-3 py-2"><span>BS Mathematics / Physics</span><span class="text-white font-semibold">Rs 30,000 – 35,000</span></div>
+            <div class="flex justify-between bg-black/20 rounded-lg px-3 py-2"><span>MS Programs</span><span class="text-white font-semibold">Rs 48,000 – 60,000</span></div>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">* Fee varies by credit hours enrolled. Verify exact amount on flex.comsats.edu.pk</p>
+        </div>
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">Fee Payment</h4>
+          <ul class="space-y-1">
+            <li>Paid per semester via bank challan or online banking</li>
+            <li>Due date: <strong class="text-white">first 3 weeks of each semester</strong></li>
+            <li>Late payment surcharge: <strong class="text-white">Rs 1,000 per week</strong></li>
+            <li>Fee freeze/deferment available on written request (Student Affairs)</li>
           </ul>
         </div>
         <div class="bg-gray-800/60 rounded-xl p-4">
-          <h4 class="text-gray-200 font-semibold mb-2">Important Offices</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li><strong class="text-white">Admission Office:</strong> Ground Floor, Admin Block</li>
-            <li><strong class="text-white">Finance Office:</strong> Admin Block, Room 102</li>
-            <li><strong class="text-white">Exam Department:</strong> Academic Block</li>
-            <li><strong class="text-white">Student Affairs:</strong> Student Center</li>
-          </ul>
-        </div>
-        <div class="bg-gray-800/60 rounded-xl p-4">
-          <h4 class="text-gray-200 font-semibold mb-2">Office Hours</h4>
-          <p>Monday – Friday: 8:00 AM to 4:00 PM</p>
-          <p class="mt-1">Saturday: 9:00 AM to 1:00 PM (Selected offices)</p>
+          <h4 class="text-gray-200 font-semibold mb-2">One-Time / Annual Charges</h4>
+          <div class="space-y-1">
+            <div class="flex justify-between"><span>Admission fee (one-time)</span><span class="text-white">Rs 5,000</span></div>
+            <div class="flex justify-between"><span>Security deposit (refundable)</span><span class="text-white">Rs 5,000</span></div>
+            <div class="flex justify-between"><span>University card</span><span class="text-white">Rs 200</span></div>
+          </div>
         </div>
       </div>
+
+      <!-- Tab: Admissions -->
+      <div id="adm-admissions" class="tab-panel text-gray-300 text-sm space-y-3">
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">Undergraduate Eligibility</h4>
+          <ul class="space-y-1">
+            <li>FSc / A-Levels / ICS / DAE with <strong class="text-white">minimum 50%</strong> marks</li>
+            <li>COMSATS Entry Test (SAT-equivalent) or valid <strong class="text-white">SAT / NTS NAT</strong> score</li>
+            <li>No age restriction; fresh and gap-year students welcome</li>
+            <li>Admissions twice yearly: <strong class="text-white">Spring (Jan) &amp; Fall (Sep)</strong></li>
+          </ul>
+        </div>
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">Required Documents</h4>
+          <ul class="space-y-1">
+            <li>Attested Matric &amp; FSc certificates / transcripts</li>
+            <li>CNIC / B-Form copy</li>
+            <li>Domicile certificate</li>
+            <li>2 passport-size photographs</li>
+            <li>Character certificate from last institution</li>
+          </ul>
+        </div>
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">Merit Formula</h4>
+          <div class="space-y-1">
+            <div class="flex justify-between"><span>Matric marks</span><span class="text-white font-semibold">10%</span></div>
+            <div class="flex justify-between"><span>FSc / Intermediate marks</span><span class="text-white font-semibold">40%</span></div>
+            <div class="flex justify-between"><span>Entry test score</span><span class="text-white font-semibold">50%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Scholarships -->
+      <div id="adm-scholarships" class="tab-panel text-gray-300 text-sm space-y-3">
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">HEC Need-Based Scholarship</h4>
+          <p>Up to <strong class="text-white">100% fee waiver</strong> for financially deserving students. Apply through <strong class="text-blue-300">hec.gov.pk</strong> each academic year.</p>
+        </div>
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">COMSATS Merit Scholarship</h4>
+          <ul class="space-y-1">
+            <li>1st position in admission batch: <strong class="text-white">50% fee waiver</strong></li>
+            <li>Semester GPA ≥ 3.8 (full load): <strong class="text-white">10% fee reduction</strong></li>
+          </ul>
+        </div>
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-2">Other Financial Aid</h4>
+          <ul class="space-y-1">
+            <li>Ehsaas Undergraduate Scholarship (PM program)</li>
+            <li>Punjab Educational Endowment Fund (PEEF)</li>
+            <li>Shaheed Benazir Bhutto Scholarship for Girls</li>
+            <li>Fee instalment plans (contact Finance Office)</li>
+          </ul>
+        </div>
+        <p class="text-xs text-gray-500">Contact Admission Office for current scholarship eligibility criteria and deadlines.</p>
+      </div>
+
+      <!-- Tab: Offices -->
+      <div id="adm-offices" class="tab-panel text-gray-300 text-sm space-y-3">
+        <div class="bg-gray-800/60 rounded-xl p-4 space-y-2">
+          <div class="info-row"><span class="info-label">Admission Office</span><span class="info-value">Ground Floor, Admin Block · Mon–Fri 8 AM–4 PM</span></div>
+          <div class="info-row"><span class="info-label">Finance Office</span><span class="info-value">Admin Block, Room 102 · Mon–Fri 8 AM–4 PM</span></div>
+          <div class="info-row"><span class="info-label">Exam Dept.</span><span class="info-value">Academic Block · Mon–Fri 9 AM–3 PM</span></div>
+          <div class="info-row"><span class="info-label">Student Affairs</span><span class="info-value">Student Center · Mon–Sat 9 AM–5 PM</span></div>
+          <div class="info-row"><span class="info-label">IT Support</span><span class="info-value">Computer Labs Block · Mon–Fri 9 AM–5 PM</span></div>
+          <div class="info-row"><span class="info-label">Library</span><span class="info-value">Academic Block · Mon–Fri 8 AM–8 PM</span></div>
+        </div>
+        <div class="bg-gray-800/60 rounded-xl p-4">
+          <h4 class="text-gray-200 font-semibold mb-1">Campus Address</h4>
+          <p>COMSATS University Islamabad, Attock Campus<br>Kamra Road, Attock, Punjab, Pakistan</p>
+          <p class="mt-1"><strong class="text-white">Phone:</strong> +92-57-9311040</p>
+          <p><strong class="text-white">General Email:</strong> attock@comsats.edu.pk</p>
+        </div>
+      </div>
+
       <div class="mt-5 flex gap-3">
         <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
         <button onclick="closeModal('modal-admin')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
@@ -239,35 +522,63 @@
     </div>
   </div>
 
-  <!-- Modal: Mental Health -->
-  <div id="modal-mental" class="modal-overlay" onclick="closeModalOutside(event, 'modal-mental')">
-    <div class="modal-box w-full max-w-lg bg-gray-900 border border-purple-900/50 rounded-3xl p-6 shadow-2xl">
+  <!-- ── Modal: Mental Health ── -->
+  <div id="modal-mental" class="modal-overlay" onclick="closeModalOutside(event,'modal-mental')">
+    <div class="modal-box w-full max-w-xl bg-gray-900 border border-purple-900/50 rounded-3xl p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold text-white">🧠 Mental Health &amp; Wellness</h3>
         <button onclick="closeModal('modal-mental')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
       </div>
-      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+      <div class="space-y-3 text-gray-300 text-sm">
+
         <div class="bg-purple-900/30 rounded-xl p-4">
           <h4 class="text-purple-300 font-semibold mb-2">Campus Counseling Services</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>Confidential one-on-one counseling sessions available</li>
-            <li>Group wellness workshops and seminars</li>
-            <li>Academic stress management programs</li>
-            <li>Contact Student Affairs Office to book an appointment</li>
+          <ul class="space-y-1">
+            <li>✅ Confidential one-on-one counseling sessions</li>
+            <li>✅ Group wellness workshops &amp; peer support circles</li>
+            <li>✅ Academic stress &amp; time-management coaching</li>
+            <li>✅ Crisis support referral to licensed psychologists</li>
           </ul>
+          <p class="mt-2 text-xs text-purple-200">📍 Book via Student Affairs Office or email <strong>studentaffairs.atk@comsats.edu.pk</strong></p>
         </div>
+
         <div class="bg-purple-900/30 rounded-xl p-4">
-          <h4 class="text-purple-300 font-semibold mb-2">💡 Daily Wellness Tips</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>Sleep 7–8 hours per night for optimal brain function</li>
-            <li>Take 5-minute breaks every 45 minutes of studying</li>
-            <li>Stay hydrated – drink at least 8 glasses of water daily</li>
-            <li>Exercise for 30 minutes at least 3 times a week</li>
-            <li>Practice deep breathing when feeling anxious</li>
-          </ul>
+          <h4 class="text-purple-300 font-semibold mb-2">⏱️ Exam Season Survival Guide</h4>
+          <div class="space-y-2">
+            <div class="bg-black/20 rounded-lg px-3 py-2">
+              <div class="font-semibold text-white text-xs mb-0.5">📅 Plan Ahead</div>
+              <div class="text-xs">Break your syllabus into daily goals 2 weeks before exams. Use a planner or app.</div>
+            </div>
+            <div class="bg-black/20 rounded-lg px-3 py-2">
+              <div class="font-semibold text-white text-xs mb-0.5">🍅 Pomodoro Technique</div>
+              <div class="text-xs">Study 25 minutes, break 5 minutes. Every 4 rounds take a 20-minute break.</div>
+            </div>
+            <div class="bg-black/20 rounded-lg px-3 py-2">
+              <div class="font-semibold text-white text-xs mb-0.5">🧘 Manage Anxiety</div>
+              <div class="text-xs">4-7-8 breathing: inhale 4s, hold 7s, exhale 8s. Repeat 3 times before exam.</div>
+            </div>
+            <div class="bg-black/20 rounded-lg px-3 py-2">
+              <div class="font-semibold text-white text-xs mb-0.5">💤 Sleep is Non-Negotiable</div>
+              <div class="text-xs">7–8 hours of sleep improves memory consolidation. All-nighters reduce performance by 40%.</div>
+            </div>
+          </div>
         </div>
+
+        <div class="bg-purple-900/30 rounded-xl p-4">
+          <h4 class="text-purple-300 font-semibold mb-2">🌿 Daily Wellness Checklist</h4>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="bg-black/20 rounded-lg p-2">💧 8 glasses of water</div>
+            <div class="bg-black/20 rounded-lg p-2">🚶 30-min walk / exercise</div>
+            <div class="bg-black/20 rounded-lg p-2">📵 1-hr phone-free study block</div>
+            <div class="bg-black/20 rounded-lg p-2">🥗 Balanced meal, no skipping</div>
+            <div class="bg-black/20 rounded-lg p-2">📓 Journal 5 min before bed</div>
+            <div class="bg-black/20 rounded-lg p-2">👥 Connect with a friend</div>
+          </div>
+        </div>
+
         <div class="bg-purple-800/30 rounded-xl p-4 text-center">
-          <p class="text-purple-200 font-medium">💙 You are not alone. Asking for help is a sign of strength.</p>
+          <p class="text-purple-100 font-medium text-base">💙 You are not alone.</p>
+          <p class="text-purple-200 text-xs mt-1">Asking for help is a sign of strength, not weakness. EduBot is always here for you too.</p>
         </div>
       </div>
       <div class="mt-5 flex gap-3">
@@ -277,42 +588,166 @@
     </div>
   </div>
 
-  <!-- Modal: Graduate Programs -->
-  <div id="modal-grad" class="modal-overlay" onclick="closeModalOutside(event, 'modal-grad')">
-    <div class="modal-box w-full max-w-lg bg-gray-900 border border-green-900/50 rounded-3xl p-6 shadow-2xl">
+  <!-- ── Modal: Graduate Programs ── -->
+  <div id="modal-grad" class="modal-overlay" onclick="closeModalOutside(event,'modal-grad')">
+    <div class="modal-box w-full max-w-xl bg-gray-900 border border-green-900/50 rounded-3xl p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold text-white">🔬 Graduate Programs</h3>
         <button onclick="closeModal('modal-grad')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
       </div>
-      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+
+      <div class="flex gap-0 border-b border-gray-700 mb-4 text-sm">
+        <button class="tab-btn active px-4 py-2 text-gray-300" onclick="switchTab(event,'grad','programs')">MS Programs</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'grad','requirements')">Requirements</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'grad','thesis')">Thesis Process</button>
+        <button class="tab-btn px-4 py-2 text-gray-300" onclick="switchTab(event,'grad','research')">Research</button>
+      </div>
+
+      <!-- Tab: Programs -->
+      <div id="grad-programs" class="tab-panel active text-gray-300 text-sm space-y-3">
         <div class="bg-green-900/30 rounded-xl p-4">
-          <h4 class="text-green-300 font-semibold mb-2">MS Programs Available</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>MS Computer Science</li>
-            <li>MS Software Engineering</li>
-            <li>MS Electrical Engineering</li>
-            <li>MS Business Administration (MBA)</li>
-          </ul>
+          <h4 class="text-green-300 font-semibold mb-3">MS Programs at Attock Campus</h4>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>🖥️ MS Computer Science</span>
+              <span class="badge bg-green-800 text-green-200">30 Cr.Hr</span>
+            </div>
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>⚙️ MS Software Engineering</span>
+              <span class="badge bg-green-800 text-green-200">30 Cr.Hr</span>
+            </div>
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>⚡ MS Electrical Engineering</span>
+              <span class="badge bg-green-800 text-green-200">30 Cr.Hr</span>
+            </div>
+            <div class="flex items-center justify-between bg-black/20 rounded-lg px-3 py-2">
+              <span>💼 MBA (Business Administration)</span>
+              <span class="badge bg-green-800 text-green-200">36 Cr.Hr</span>
+            </div>
+          </div>
         </div>
-        <div class="bg-green-900/30 rounded-xl p-4">
-          <h4 class="text-green-300 font-semibold mb-2">MS Admission Requirements</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>BS degree with minimum 2.5 CGPA</li>
-            <li>Valid NTS-GAT (General) score</li>
-            <li>Statement of purpose letter</li>
-            <li>Two recommendation letters from faculty</li>
-          </ul>
-        </div>
-        <div class="bg-green-900/30 rounded-xl p-4">
-          <h4 class="text-green-300 font-semibold mb-2">Research Opportunities</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>AI &amp; Machine Learning Lab</li>
-            <li>Software Engineering Research Group</li>
-            <li>Network &amp; Security Research Lab</li>
-            <li>HEC-funded research projects available</li>
+        <div class="bg-green-900/20 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">Program Structure (MS)</h4>
+          <ul class="space-y-1">
+            <li>Duration: <strong class="text-white">1.5 – 2 years</strong> (3–4 semesters)</li>
+            <li>Coursework: <strong class="text-white">24 credit hours</strong> minimum</li>
+            <li>Thesis / Research Project: <strong class="text-white">6 credit hours</strong></li>
+            <li>Comprehensive exam before thesis defense</li>
           </ul>
         </div>
       </div>
+
+      <!-- Tab: Requirements -->
+      <div id="grad-requirements" class="tab-panel text-gray-300 text-sm space-y-3">
+        <div class="bg-green-900/30 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">Academic Requirements</h4>
+          <ul class="space-y-1">
+            <li>BS / BCS / BE degree (16 years education)</li>
+            <li>Minimum CGPA: <strong class="text-white">2.5 / 4.0</strong></li>
+            <li>Relevant background in discipline</li>
+            <li>Deficiency courses may be required for cross-discipline applicants</li>
+          </ul>
+        </div>
+        <div class="bg-green-900/30 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">Test Requirements</h4>
+          <ul class="space-y-1">
+            <li>Valid <strong class="text-white">NTS-GAT (General)</strong> score — minimum 50 percentile</li>
+            <li>OR valid <strong class="text-white">GRE General</strong> score (accepted)</li>
+            <li>COMSATS internal test also accepted in some cycles</li>
+          </ul>
+        </div>
+        <div class="bg-green-900/30 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">Application Documents</h4>
+          <ul class="space-y-1">
+            <li>BS transcripts (all semesters, attested)</li>
+            <li>Statement of Purpose (1–2 pages)</li>
+            <li>Two recommendation letters from faculty supervisors</li>
+            <li>CNIC copy, 2 passport photos</li>
+            <li>NTS-GAT score card</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tab: Thesis Process -->
+      <div id="grad-thesis" class="tab-panel text-gray-300 text-sm">
+        <div class="space-y-0">
+          <div class="timeline-item">
+            <div class="timeline-dot bg-green-600/30 text-green-300 text-xs">1</div>
+            <div>
+              <div class="font-semibold text-white">Supervisor Allocation</div>
+              <div class="text-xs text-gray-400">Semester 1</div>
+              <div class="text-xs mt-1">Assigned by department based on research interest. Can also request a specific faculty member.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot bg-green-600/30 text-green-300 text-xs">2</div>
+            <div>
+              <div class="font-semibold text-white">Synopsis Submission</div>
+              <div class="text-xs text-gray-400">Semester 1 – 2</div>
+              <div class="text-xs mt-1">3–5 page research proposal approved by Graduate Studies Committee (BASR).</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot bg-green-600/30 text-green-300 text-xs">3</div>
+            <div>
+              <div class="font-semibold text-white">Research &amp; Writing</div>
+              <div class="text-xs text-gray-400">Semester 2 – 3</div>
+              <div class="text-xs mt-1">Regular meetings with supervisor. Monthly progress report required.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot bg-green-600/30 text-green-300 text-xs">4</div>
+            <div>
+              <div class="font-semibold text-white">Internal Defense</div>
+              <div class="text-xs text-gray-400">Semester 3 – 4</div>
+              <div class="text-xs mt-1">Presented before departmental committee. Revisions incorporated after feedback.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot bg-blue-600/30 text-blue-300">🎓</div>
+            <div>
+              <div class="font-semibold text-white">Final Defense &amp; Degree</div>
+              <div class="text-xs text-gray-400">Semester 4</div>
+              <div class="text-xs mt-1">External examiner panel. Approved thesis submitted to HEC repository. Degree awarded at convocation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Research -->
+      <div id="grad-research" class="tab-panel text-gray-300 text-sm space-y-3">
+        <div class="bg-green-900/30 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">Active Research Labs</h4>
+          <div class="space-y-2">
+            <div class="bg-black/20 rounded-lg px-3 py-2">
+              <div class="font-semibold text-white text-xs">🤖 AI &amp; Machine Learning Lab</div>
+              <div class="text-xs mt-0.5">Deep learning, NLP, computer vision, and intelligent systems.</div>
+            </div>
+            <div class="bg-black/20 rounded-lg px-3 py-2">
+              <div class="font-semibold text-white text-xs">🔐 Network &amp; Cyber Security Lab</div>
+              <div class="text-xs mt-0.5">Intrusion detection, cryptography, and secure protocol design.</div>
+            </div>
+            <div class="bg-black/20 rounded-lg px-3 py-2">
+              <div class="font-semibold text-white text-xs">💡 Software Engineering Research Group</div>
+              <div class="text-xs mt-0.5">Agile methodologies, software quality, and human-computer interaction.</div>
+            </div>
+            <div class="bg-black/20 rounded-lg px-3 py-2">
+              <div class="font-semibold text-white text-xs">⚡ Power Systems &amp; Embedded Lab</div>
+              <div class="text-xs mt-0.5">Renewable energy, control systems, and IoT-embedded solutions.</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-green-900/20 rounded-xl p-4">
+          <h4 class="text-green-300 font-semibold mb-2">Funding &amp; Publications</h4>
+          <ul class="space-y-1">
+            <li>HEC-funded research projects for eligible faculty &amp; students</li>
+            <li>Publication in HEC-recognized journals required for MS degree</li>
+            <li>Conference grants available through ORIC (Office of Research)</li>
+            <li>Contact: <strong class="text-blue-300">oric.atk@comsats.edu.pk</strong></li>
+          </ul>
+        </div>
+      </div>
+
       <div class="mt-5 flex gap-3">
         <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
         <button onclick="closeModal('modal-grad')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
@@ -320,45 +755,128 @@
     </div>
   </div>
 
-  <!-- Modal: Campus Events -->
-  <div id="modal-events" class="modal-overlay" onclick="closeModalOutside(event, 'modal-events')">
-    <div class="modal-box w-full max-w-lg bg-gray-900 border border-yellow-900/50 rounded-3xl p-6 shadow-2xl">
+  <!-- ── Modal: Campus Events ── -->
+  <div id="modal-events" class="modal-overlay" onclick="closeModalOutside(event,'modal-events')">
+    <div class="modal-box w-full max-w-xl bg-gray-900 border border-yellow-900/50 rounded-3xl p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold text-white">📅 Campus Events &amp; Societies</h3>
         <button onclick="closeModal('modal-events')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
       </div>
-      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
-        <div class="bg-yellow-900/30 rounded-xl p-4">
-          <h4 class="text-yellow-300 font-semibold mb-2">Active Student Societies</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>ACM Student Chapter (CS &amp; SE)</li>
-            <li>IEEE Student Branch (Electrical Engineering)</li>
-            <li>Literary &amp; Debating Society</li>
-            <li>Sports &amp; Recreation Club</li>
-            <li>Photography &amp; Arts Club</li>
-            <li>Entrepreneurship &amp; Startup Society</li>
-          </ul>
+
+      <div class="flex gap-0 border-b border-gray-700 mb-4 text-sm">
+        <button class="tab-btn active px-3 py-2 text-gray-300" onclick="switchTab(event,'evt','societies')">Societies</button>
+        <button class="tab-btn px-3 py-2 text-gray-300" onclick="switchTab(event,'evt','events')">Events</button>
+        <button class="tab-btn px-3 py-2 text-gray-300" onclick="switchTab(event,'evt','facilities')">Facilities</button>
+      </div>
+
+      <!-- Tab: Societies -->
+      <div id="evt-societies" class="tab-panel active text-gray-300 text-sm space-y-2">
+        <div class="bg-yellow-900/30 rounded-xl p-3">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">💻</span>
+            <div>
+              <div class="font-semibold text-white">Computer Science Society</div>
+              <div class="text-xs mt-0.5">Coding competitions, hackathons, tech talks, and project showcases. Open to all CS &amp; SE students.</div>
+            </div>
+          </div>
         </div>
-        <div class="bg-yellow-900/30 rounded-xl p-4">
-          <h4 class="text-yellow-300 font-semibold mb-2">Annual Events</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>COMSATS Sports Week (Spring)</li>
-            <li>Tech Fest / Science Exhibition</li>
-            <li>Annual Cultural Gala</li>
-            <li>Convocation Ceremony</li>
-            <li>Career Fair &amp; Industry Expo</li>
-          </ul>
+        <div class="bg-yellow-900/30 rounded-xl p-3">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🔬</span>
+            <div>
+              <div class="font-semibold text-white">Research &amp; Innovation Society</div>
+              <div class="text-xs mt-0.5">Supports student research projects, seminars with industry experts, and HEC essay competitions.</div>
+            </div>
+          </div>
         </div>
-        <div class="bg-yellow-900/30 rounded-xl p-4">
-          <h4 class="text-yellow-300 font-semibold mb-2">Facilities</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li>Sports complex with cricket and football grounds</li>
-            <li>Computer labs (24-hour access for enrolled students)</li>
-            <li>Library with digital resources and study halls</li>
-            <li>Cafeteria and student lounge</li>
-          </ul>
+        <div class="bg-yellow-900/30 rounded-xl p-3">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">⚡</span>
+            <div>
+              <div class="font-semibold text-white">Engineering Society</div>
+              <div class="text-xs mt-0.5">IEEE-affiliated. Robotics, circuit design contests, and industry plant visits.</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-yellow-900/30 rounded-xl p-3">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🕌</span>
+            <div>
+              <div class="font-semibold text-white">Islamic Cultural Society</div>
+              <div class="text-xs mt-0.5">Organizes Islamic lectures, Quran recitation competitions, and Ramazan events.</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-yellow-900/30 rounded-xl p-3">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">⚽</span>
+            <div>
+              <div class="font-semibold text-white">Sports Society</div>
+              <div class="text-xs mt-0.5">Inter-departmental &amp; inter-university tournaments. Cricket, football, badminton, table tennis.</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-yellow-900/30 rounded-xl p-3">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl">🌱</span>
+            <div>
+              <div class="font-semibold text-white">Funoon Society (Arts &amp; Culture)</div>
+              <div class="text-xs mt-0.5">Drama, debate, photography, art exhibitions, and the annual cultural gala.</div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Tab: Events -->
+      <div id="evt-events" class="tab-panel text-gray-300 text-sm space-y-2">
+        <div class="bg-yellow-900/30 rounded-xl p-4">
+          <h4 class="text-yellow-300 font-semibold mb-3">Annual Event Calendar</h4>
+          <div class="space-y-2">
+            <div class="flex gap-3 items-start bg-black/20 rounded-lg p-2">
+              <span class="badge bg-blue-800 text-blue-200 mt-0.5">Sep</span>
+              <div><div class="font-semibold text-white text-xs">Freshers' Welcome</div><div class="text-xs">Orientation &amp; welcome ceremony for new students each fall.</div></div>
+            </div>
+            <div class="flex gap-3 items-start bg-black/20 rounded-lg p-2">
+              <span class="badge bg-green-800 text-green-200 mt-0.5">Oct</span>
+              <div><div class="font-semibold text-white text-xs">Tech Fest</div><div class="text-xs">Annual CS &amp; Engineering science exhibition, project competitions &amp; industry judge panel.</div></div>
+            </div>
+            <div class="flex gap-3 items-start bg-black/20 rounded-lg p-2">
+              <span class="badge bg-yellow-800 text-yellow-200 mt-0.5">Mar</span>
+              <div><div class="font-semibold text-white text-xs">Sports Week</div><div class="text-xs">Inter-departmental games across cricket, football, badminton, and more.</div></div>
+            </div>
+            <div class="flex gap-3 items-start bg-black/20 rounded-lg p-2">
+              <span class="badge bg-purple-800 text-purple-200 mt-0.5">Apr</span>
+              <div><div class="font-semibold text-white text-xs">Cultural Gala</div><div class="text-xs">Drama, music, poetry, photography awards &amp; talent showcase.</div></div>
+            </div>
+            <div class="flex gap-3 items-start bg-black/20 rounded-lg p-2">
+              <span class="badge bg-red-800 text-red-200 mt-0.5">May</span>
+              <div><div class="font-semibold text-white text-xs">Career Fair</div><div class="text-xs">Industry companies visit campus for internship &amp; job opportunities.</div></div>
+            </div>
+            <div class="flex gap-3 items-start bg-black/20 rounded-lg p-2">
+              <span class="badge bg-gray-700 text-gray-200 mt-0.5">Nov</span>
+              <div><div class="font-semibold text-white text-xs">Convocation</div><div class="text-xs">Annual degree-awarding ceremony for graduating students.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Facilities -->
+      <div id="evt-facilities" class="tab-panel text-gray-300 text-sm space-y-3">
+        <div class="bg-yellow-900/30 rounded-xl p-4">
+          <h4 class="text-yellow-300 font-semibold mb-3">Campus Facilities</h4>
+          <div class="space-y-2">
+            <div class="info-row"><span class="info-label">📚 Library</span><span class="info-value">Digital &amp; physical books, e-journals (HEC DL), quiet study halls. Mon–Fri 8 AM – 8 PM.</span></div>
+            <div class="info-row"><span class="info-label">💻 Computer Labs</span><span class="info-value">Multiple labs with high-speed internet. Software suites for CS, EE, and design.</span></div>
+            <div class="info-row"><span class="info-label">🏥 Medical Room</span><span class="info-value">First-aid &amp; basic medical consultation. Emergency referral to Attock hospital.</span></div>
+            <div class="info-row"><span class="info-label">🍽️ Cafeteria</span><span class="info-value">Subsidized meals and snacks. Open 8 AM – 6 PM on weekdays.</span></div>
+            <div class="info-row"><span class="info-label">🏋️ Gymnasium</span><span class="info-value">Basic gym equipment available for enrolled students. Free access.</span></div>
+            <div class="info-row"><span class="info-label">🏏 Sports Grounds</span><span class="info-value">Cricket ground, football field, basketball &amp; badminton courts.</span></div>
+            <div class="info-row"><span class="info-label">🚌 Transport</span><span class="info-value">COMSATS bus service on select routes. Contact Student Affairs for schedule.</span></div>
+            <div class="info-row"><span class="info-label">🏠 Hostel</span><span class="info-value">Separate hostels for male and female students. Limited seats — apply early.</span></div>
+          </div>
+        </div>
+      </div>
+
       <div class="mt-5 flex gap-3">
         <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
         <button onclick="closeModal('modal-events')" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-xl font-medium text-sm transition">Close</button>
@@ -366,37 +884,75 @@
     </div>
   </div>
 
-  <!-- Modal: Faculty Contacts -->
-  <div id="modal-faculty" class="modal-overlay" onclick="closeModalOutside(event, 'modal-faculty')">
-    <div class="modal-box w-full max-w-lg bg-gray-900 border border-red-900/50 rounded-3xl p-6 shadow-2xl">
+  <!-- ── Modal: Faculty & HoDs ── -->
+  <div id="modal-faculty" class="modal-overlay" onclick="closeModalOutside(event,'modal-faculty')">
+    <div class="modal-box w-full max-w-xl bg-gray-900 border border-red-900/50 rounded-3xl p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-bold text-white">👥 Faculty &amp; Department Contacts</h3>
         <button onclick="closeModal('modal-faculty')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
       </div>
-      <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+
+      <div class="space-y-3 text-gray-300 text-sm">
+
+        <!-- CS Department -->
         <div class="bg-red-900/30 rounded-xl p-4">
-          <h4 class="text-red-300 font-semibold mb-2">Department of Computer Science</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li><strong class="text-white">HoD:</strong> Dr. Zahoor ur Rehman</li>
-            <li><strong class="text-white">Email:</strong> cs.atk@comsats.edu.pk</li>
-            <li><strong class="text-white">Office:</strong> CS Block, Room 201</li>
-            <li><strong class="text-white">Hours:</strong> Mon–Fri, 9 AM–4 PM</li>
-          </ul>
+          <h4 class="text-red-300 font-semibold mb-2">🖥️ Department of Computer Science</h4>
+          <div class="space-y-1">
+            <div class="info-row"><span class="info-label">HoD</span><span class="info-value">Dr. Zahoor-ur-Rehman Tanoli</span></div>
+            <div class="info-row"><span class="info-label">Email</span><span class="info-value">cs.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">Office</span><span class="info-value">CS Block, Room 201</span></div>
+            <div class="info-row"><span class="info-label">Hours</span><span class="info-value">Mon–Fri, 9 AM – 4 PM</span></div>
+            <div class="info-row"><span class="info-label">Programs</span><span class="info-value">BS CS · MS CS · MS SE</span></div>
+          </div>
         </div>
+
+        <!-- EE Department -->
         <div class="bg-red-900/30 rounded-xl p-4">
-          <h4 class="text-red-300 font-semibold mb-2">Key Administrative Contacts</h4>
-          <ul class="list-disc ml-4 space-y-1">
-            <li><strong class="text-white">Registrar:</strong> registrar.atk@comsats.edu.pk</li>
-            <li><strong class="text-white">Admission:</strong> admissions.atk@comsats.edu.pk</li>
-            <li><strong class="text-white">Library:</strong> library.atk@comsats.edu.pk</li>
-            <li><strong class="text-white">IT Support:</strong> itsupport.atk@comsats.edu.pk</li>
-          </ul>
+          <h4 class="text-red-300 font-semibold mb-2">⚡ Department of Electrical Engineering</h4>
+          <div class="space-y-1">
+            <div class="info-row"><span class="info-label">HoD</span><span class="info-value">Dr. Syed Usman Ali Shah</span></div>
+            <div class="info-row"><span class="info-label">Email</span><span class="info-value">ee.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">Office</span><span class="info-value">Engineering Block, Room 105</span></div>
+            <div class="info-row"><span class="info-label">Hours</span><span class="info-value">Mon–Fri, 9 AM – 4 PM</span></div>
+            <div class="info-row"><span class="info-label">Programs</span><span class="info-value">BS EE · MS EE</span></div>
+          </div>
         </div>
+
+        <!-- Management Sciences -->
         <div class="bg-red-900/30 rounded-xl p-4">
-          <h4 class="text-red-300 font-semibold mb-2">Campus Address</h4>
-          <p>COMSATS University Islamabad,<br>Attock Campus,<br>Kamra Road, Attock, Punjab, Pakistan</p>
-          <p class="mt-2"><strong class="text-white">Phone:</strong> +92-57-9311040</p>
+          <h4 class="text-red-300 font-semibold mb-2">💼 Department of Management Sciences</h4>
+          <div class="space-y-1">
+            <div class="info-row"><span class="info-label">HoD</span><span class="info-value">Dr. Faisal Shahzad</span></div>
+            <div class="info-row"><span class="info-label">Email</span><span class="info-value">ms.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">Office</span><span class="info-value">Admin Block, Room 301</span></div>
+            <div class="info-row"><span class="info-label">Hours</span><span class="info-value">Mon–Fri, 9 AM – 4 PM</span></div>
+            <div class="info-row"><span class="info-label">Programs</span><span class="info-value">BBA · MBA</span></div>
+          </div>
         </div>
+
+        <!-- Mathematics & Natural Sciences -->
+        <div class="bg-red-900/30 rounded-xl p-4">
+          <h4 class="text-red-300 font-semibold mb-2">➗ Dept. of Mathematics &amp; Natural Sciences</h4>
+          <div class="space-y-1">
+            <div class="info-row"><span class="info-label">Email</span><span class="info-value">math.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">Office</span><span class="info-value">Science Block, Ground Floor</span></div>
+            <div class="info-row"><span class="info-label">Programs</span><span class="info-value">BS Mathematics · BS Physics</span></div>
+          </div>
+        </div>
+
+        <!-- Key Admin Contacts -->
+        <div class="bg-red-900/20 rounded-xl p-4">
+          <h4 class="text-red-300 font-semibold mb-2">Key Administrative Emails</h4>
+          <div class="space-y-1">
+            <div class="info-row"><span class="info-label">Registrar</span><span class="info-value">registrar.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">Admissions</span><span class="info-value">admissions.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">Library</span><span class="info-value">library.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">IT Support</span><span class="info-value">itsupport.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">ORIC</span><span class="info-value">oric.atk@comsats.edu.pk</span></div>
+            <div class="info-row"><span class="info-label">Phone</span><span class="info-value">+92-57-9311040</span></div>
+          </div>
+        </div>
+
       </div>
       <div class="mt-5 flex gap-3">
         <a href="voicechat.html" class="flex-1 text-center bg-blue-700 hover:bg-blue-800 text-white py-2 rounded-xl font-medium text-sm transition">Ask EduBot</a>
@@ -406,20 +962,22 @@
   </div>
 
   <script>
-    function openModal(id) {
-      document.getElementById(id).classList.add('active');
-    }
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('active');
-    }
-    function closeModalOutside(event, id) {
-      if (event.target.id === id) closeModal(id);
-    }
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function closeModalOutside(event, id) { if (event.target.id === id) closeModal(id); }
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape')
         document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
-      }
     });
+
+    function switchTab(event, group, tab) {
+      const modal = event.target.closest('.modal-box');
+      modal.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      modal.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      modal.querySelector(`#${group}-${tab}`).classList.add('active');
+    }
   </script>
 </body>
 </html>
