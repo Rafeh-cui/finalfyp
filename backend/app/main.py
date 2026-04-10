@@ -19,14 +19,28 @@ from pydantic import BaseModel
 # Dataset Knowledge Base
 # ---------------------------------------------------------------------------
 
+GREETINGS = {
+    "hi", "hello", "hey", "salam", "assalam", "assalamualaikum", "good morning",
+    "good afternoon", "good evening", "good day", "how are you", "what's up",
+    "howdy", "greetings", "sup",
+}
+
+def _is_greeting(text: str) -> bool:
+    t = text.lower().strip().rstrip("!?.،")
+    return t in GREETINGS or any(t.startswith(g + " ") for g in GREETINGS)
+
+
 class DatasetKnowledgeBase:
-    """Loads the COMSATS Q&A dataset and finds similar answers via TF-IDF."""
+    """Loads the COMSATS Q&A dataset and finds similar answers using a hybrid
+    char n-gram + word n-gram TF-IDF scorer for higher precision."""
 
     def __init__(self, dataset_path: str):
         self.qa_pairs: list[dict] = []
         self.questions: list[str] = []
-        self._vectorizer = None
-        self._matrix = None
+        self._char_vec = None
+        self._char_mat = None
+        self._word_vec = None
+        self._word_mat = None
         self._ready = False
         self._load(dataset_path)
 
@@ -48,26 +62,45 @@ class DatasetKnowledgeBase:
     def _build_index(self):
         try:
             from sklearn.feature_extraction.text import TfidfVectorizer
-            self._vectorizer = TfidfVectorizer(
+            # Character n-gram scorer (surface similarity)
+            self._char_vec = TfidfVectorizer(
                 analyzer="char_wb",
                 ngram_range=(2, 4),
                 max_features=8000,
                 sublinear_tf=True,
             )
-            self._matrix = self._vectorizer.fit_transform(self.questions)
+            self._char_mat = self._char_vec.fit_transform(self.questions)
+            # Word n-gram scorer (semantic/topical similarity)
+            self._word_vec = TfidfVectorizer(
+                analyzer="word",
+                ngram_range=(1, 2),
+                max_features=8000,
+                sublinear_tf=True,
+            )
+            self._word_mat = self._word_vec.fit_transform(self.questions)
             self._ready = True
         except Exception as e:
             print(f"[EduBot] WARNING: TF-IDF index build failed ({e}).")
 
-    def find_similar(self, query: str, top_k: int = 5, min_score: float = 0.15) -> list[dict]:
+    def _hybrid_scores(self, query: str):
+        """Return combined (char*0.4 + word*0.6) similarity scores as numpy array."""
+        from sklearn.metrics.pairwise import cosine_similarity
+        import numpy as np
+        char_scores = cosine_similarity(
+            self._char_vec.transform([query]), self._char_mat
+        ).flatten()
+        word_scores = cosine_similarity(
+            self._word_vec.transform([query]), self._word_mat
+        ).flatten()
+        return 0.4 * char_scores + 0.6 * word_scores
+
+    def find_similar(self, query: str, top_k: int = 5, min_score: float = 0.20) -> list[dict]:
         """Return top_k Q&A pairs most similar to query, filtered by min_score."""
         if not self._ready or not query.strip():
             return []
         try:
-            from sklearn.metrics.pairwise import cosine_similarity
             import numpy as np
-            q_vec = self._vectorizer.transform([query])
-            scores = cosine_similarity(q_vec, self._matrix).flatten()
+            scores = self._hybrid_scores(query)
             top_indices = np.argsort(scores)[::-1][:top_k]
             results = []
             for idx in top_indices:
@@ -82,8 +115,8 @@ class DatasetKnowledgeBase:
         except Exception:
             return []
 
-    def best_answer(self, query: str, min_score: float = 0.30) -> Optional[str]:
-        """Return the best dataset answer if similarity is high enough, else None."""
+    def best_answer(self, query: str, min_score: float = 0.50) -> Optional[str]:
+        """Return the best dataset answer only when confidence is high enough."""
         results = self.find_similar(query, top_k=1, min_score=min_score)
         if results:
             return results[0]["output"]
@@ -174,7 +207,10 @@ def _synthesize_audio(text: str, language: Optional[str] = "en") -> Optional[str
 
 def _build_system_prompt(question: str) -> str:
     """Build system prompt enriched with relevant dataset context."""
-    similar = kb.find_similar(question, top_k=5, min_score=0.10)
+    # Don't inject noisy context for greetings
+    if _is_greeting(question):
+        return SYSTEM_PROMPT_TEMPLATE.format(dataset_context="")
+    similar = kb.find_similar(question, top_k=5, min_score=0.20)
     if similar:
         qa_text = "\n".join(
             f"Q: {item['input']}\nA: {item['output']}"
@@ -204,28 +240,36 @@ def _call_gemini(question: str, model_name: str) -> str:
 
 def _dataset_answer(question: str) -> str:
     """Search dataset for a good answer, with a conversational wrapper."""
-    # Try high-confidence match first
-    answer = kb.best_answer(question, min_score=0.35)
+    lang = _detect_language(question)
+
+    # Greetings — respond naturally without a dataset lookup
+    if _is_greeting(question):
+        if lang == "ur":
+            return "السلام علیکم! میں EduBot ہوں، COMSATS اٹک کیمپس کا ذہین معاون۔ آپ کا کیا سوال ہے؟"
+        return "Hello! I'm EduBot, your smart assistant for COMSATS Attock Campus. How can I help you today?"
+
+    # High-confidence direct answer (hybrid score ≥ 0.50)
+    answer = kb.best_answer(question, min_score=0.50)
     if answer:
         return answer
 
-    # Try looser match and build a response from top results
-    similar = kb.find_similar(question, top_k=3, min_score=0.15)
+    # Medium-confidence match — only use it when there's a clear winner
+    similar = kb.find_similar(question, top_k=3, min_score=0.25)
     if similar:
         best = similar[0]
-        if len(similar) == 1 or best["score"] > similar[1]["score"] * 1.3:
-            return best["output"]
-        # Multiple similar results — combine them
-        lang = _detect_language(question)
-        if lang == "ur":
-            intro = "آپ کے سوال سے متعلق یہ معلومات ہیں:"
-        else:
-            intro = "Here's what I found related to your question:"
-        combined = "\n\n".join(f"• {r['output']}" for r in similar[:2])
-        return f"{intro}\n\n{combined}"
+        # Use top result only if it clearly leads the pack (20% margin) and score ≥ 0.42
+        if best["score"] >= 0.42:
+            if len(similar) == 1 or best["score"] > similar[1]["score"] * 1.2:
+                return best["output"]
+            # Multiple plausible results — combine top 2
+            if lang == "ur":
+                intro = "آپ کے سوال سے متعلق یہ معلومات ہیں:"
+            else:
+                intro = "Here's what I found related to your question:"
+            combined = "\n\n".join(f"• {r['output']}" for r in similar[:2])
+            return f"{intro}\n\n{combined}"
 
-    # No match found
-    lang = _detect_language(question)
+    # No confident match found
     if lang == "ur":
         return (
             "معذرت، اس سوال کا جواب میرے ڈیٹا بیس میں موجود نہیں ہے۔ "
