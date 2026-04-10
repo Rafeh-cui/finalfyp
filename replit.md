@@ -1,62 +1,49 @@
-# EduBot - Smart Campus Assistant
+# EduBot — COMSATS University Islamabad, Attock Campus
 
-A voice-enabled AI chatbot for COMSATS University Islamabad, Attock Campus. Students can ask campus-related questions and receive answers with synthesized audio.
+AI-powered voice chatbot for COMSATS University Islamabad, Attock Campus students. Built as a Final Year Project (FYP).
 
 ## Architecture
 
-- **Frontend**: Static HTML/CSS/JS pages served via `http-server` on port 5000
-- **Backend**: Python FastAPI server on port 8000, providing `/api/chat` and `/health` endpoints
+**Single-server setup**: FastAPI (Python) runs on port 5000 and serves BOTH the frontend static files AND the `/api/chat` AI endpoint.
 
-## Project Structure
+- `backend/app/main.py` — FastAPI app (Gemini AI + gTTS + static file serving)
+- `frontend/` — Static HTML/CSS/JS pages (served by FastAPI's StaticFiles mount)
 
-```
-├── frontend/           # Static HTML/JS/CSS pages
-│   ├── index.html      # Entry redirect to firstscreen.html
-│   ├── firstscreen.html  # App start/splash screen
-│   ├── login.html      # Firebase login
-│   ├── register.html   # Firebase registration
-│   ├── welcomescreen.html  # Post-login welcome
-│   ├── voicechat.html  # Main voice/text chat interface
-│   ├── academics.html  # Academic info page
-│   ├── faq.html        # FAQ page
-│   ├── firebase.js     # Firebase auth/firestore config
-│   └── registerHandler.js  # Registration logic
-├── backend/
-│   └── app/
-│       └── main.py     # FastAPI app with BLOOMZ model integration
-├── notebooks/          # Jupyter notebooks for AI/gTTS experiments
-├── package.json        # npm scripts for dev server management
-└── replit.md           # This file
-```
+## Pages
 
-## Workflows
+| Page | File | Purpose |
+|------|------|---------|
+| First Screen | `frontend/firstscreen.html` | Landing/splash screen |
+| Login | `frontend/login.html` | Firebase Auth login |
+| Register | `frontend/register.html` | Firebase Auth registration |
+| Welcome | `frontend/welcomescreen.html` | Home with quick access cards |
+| Voice Chat | `frontend/voicechat.html` | AI chat (text + voice input) |
+| Academics | `frontend/academics.html` | 6 category cards with modals |
+| FAQ | `frontend/faq.html` | Expandable accordion FAQs |
 
-- **Start application** (webview, port 5000): Serves the frontend static files
-- **Backend API** (console, port 8000): FastAPI server with AI chat endpoint
+## Tech Stack
 
-## Key Dependencies
+- **AI**: Google Gemini API (`gemini-2.0-flash-lite` → `gemini-2.0-flash` → `gemini-2.5-flash` fallback chain)
+- **Backend**: FastAPI + Python 3.11 + gTTS (text-to-speech) + langdetect
+- **Frontend**: HTML + TailwindCSS CDN + vanilla JS + Web Speech API
+- **Auth**: Firebase Authentication (project: fyp056)
+- **Hosting**: Replit (port 5000)
 
-### Python (backend)
-- `fastapi` + `uvicorn` - Web framework and ASGI server
-- `transformers` - Hugging Face transformers (BLOOMZ model)
-- `torch` - PyTorch (ML inference)
-- `gTTS` - Google Text-to-Speech for audio responses
-- `langdetect` - Language detection
+## Workflow
 
-### Node.js (frontend)
-- `http-server` - Static file server
-- `concurrently` - Run multiple processes
+- **Start application**: `python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 5000 --reload`
 
-## AI Model
+## Environment Variables / Secrets
 
-The backend requires a `bloomz-finetuned-model/` directory in the project root containing a fine-tuned BLOOMZ model. Without it, the backend runs in **demo mode** (returning a placeholder message). To enable full functionality, place the model files in that directory.
+- `GEMINI_API_KEY` — Google Gemini API key (set in Replit Secrets)
 
-## Firebase
+## Key Design Decisions
 
-The frontend uses Firebase for authentication. The config is in `frontend/firebase.js` (project: `fyp056`).
+- FastAPI serves both API and frontend on port 5000 to avoid cross-origin URL issues in Replit's proxied iframe environment
+- Frontend uses relative URL `/api/chat` for all AI requests
+- Gemini model fallback chain handles quota exhaustion gracefully
+- 20-second timeout on all AI requests to prevent hanging
 
-## Environment Notes
+## Navigation Flow
 
-- Backend runs in demo mode without the BLOOMZ model files
-- Frontend Firebase auth will work with live internet connection
-- `torch` and `transformers` are heavy dependencies; install only when model is available
+firstscreen → login (or register) → welcomescreen → voicechat / academics / faq

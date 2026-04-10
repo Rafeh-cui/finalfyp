@@ -115,20 +115,8 @@
   </footer>
 
   <script>
-    // ── Backend URL resolution ──────────────────────────────────────────────
-    function getBackendURL() {
-      if (window.__EDUBOT_API_BASE_URL__) return window.__EDUBOT_API_BASE_URL__;
-      const hostname = window.location.hostname;
-      if (hostname.includes('.replit.dev') || hostname.includes('.repl.co') || hostname.includes('.replit.app')) {
-        return `https://${hostname.replace('-5000.', '-8000.')}`;
-      }
-      if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-        return `http://${hostname}:8000`;
-      }
-      return 'http://localhost:8000';
-    }
-    const API_BASE_URL = getBackendURL();
-    console.log('[EduBot] Backend URL:', API_BASE_URL);
+    // API is served by the same server as the frontend — use relative URL
+    const API_BASE_URL = '';
 
     // ── DOM refs ────────────────────────────────────────────────────────────
     const voiceBtn         = document.getElementById('voiceBtn');

@@ -8,6 +8,8 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 # ---------------------------------------------------------------------------
@@ -87,36 +89,37 @@ def _generate_gemini_response(question: str) -> tuple[str, str, Optional[str]]:
     from google.genai import types as genai_types
 
     models_to_try = ["gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash"]
-    last_error = None
+
+    def _try_model(model_name: str) -> str:
+        from google.genai import types as _types
+        response = gemini_client.models.generate_content(
+            model=model_name,
+            contents=question,
+            config=_types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                temperature=0.7,
+                max_output_tokens=512,
+            ),
+        )
+        text = response.text.strip() if response.text else ""
+        return text or "I'm sorry, I couldn't generate a response. Please try rephrasing your question."
 
     for model_name in models_to_try:
         try:
-            response = gemini_client.models.generate_content(
-                model=model_name,
-                contents=question,
-                config=genai_types.GenerateContentConfig(
-                    system_instruction=SYSTEM_PROMPT,
-                    temperature=0.7,
-                    max_output_tokens=512,
-                ),
-            )
-            answer = response.text.strip() if response.text else ""
-            if not answer:
-                answer = "I'm sorry, I couldn't generate a response. Please try rephrasing your question."
+            answer = _try_model(model_name)
             language = _detect_language(answer)
             audio_base64 = _synthesize_audio(answer, language)
             return answer, language, audio_base64
         except Exception as e:
-            last_error = e
             error_str = str(e)
-            # Continue to next model on quota, rate limit, or server overload errors
-            if any(code in error_str for code in ["429", "503", "RESOURCE_EXHAUSTED", "UNAVAILABLE", "quota"]):
+            transient = ["429", "503", "RESOURCE_EXHAUSTED", "UNAVAILABLE", "quota", "rate"]
+            if any(code in error_str for code in transient):
                 continue
             raise
 
     answer = (
-        "I'm currently experiencing high demand. Please try again in a moment, "
-        "or contact the COMSATS Attock Campus admin office at edubotofficial@gmail.com for assistance."
+        "I'm currently experiencing high traffic. Please try again in a moment, "
+        "or visit edubotofficial@gmail.com for assistance."
     )
     return answer, "en", _synthesize_audio(answer, "en")
 
@@ -156,6 +159,11 @@ async def health_check() -> dict:
     }
 
 
+@app.get("/", tags=["Frontend"])
+async def root():
+    return RedirectResponse(url="/firstscreen.html")
+
+
 @app.post("/api/chat", response_model=ChatResponse, tags=["Chat"])
 async def chat(request: ChatRequest) -> ChatResponse:
     question = request.question.strip()
@@ -163,11 +171,25 @@ async def chat(request: ChatRequest) -> ChatResponse:
         raise HTTPException(status_code=400, detail="Question must not be empty.")
 
     loop = asyncio.get_event_loop()
-    answer, language, audio_base64 = await loop.run_in_executor(
-        None, _generate_gemini_response, question
-    )
-
-    if not answer:
-        raise HTTPException(status_code=500, detail="Failed to generate a response. Please try again.")
+    try:
+        answer, language, audio_base64 = await asyncio.wait_for(
+            loop.run_in_executor(None, _generate_gemini_response, question),
+            timeout=20.0
+        )
+    except asyncio.TimeoutError:
+        answer = (
+            "I'm taking too long to respond right now. Please try again in a moment, "
+            "or contact edubotofficial@gmail.com for assistance."
+        )
+        language = "en"
+        audio_base64 = None
 
     return ChatResponse(answer=answer, language=language, audio_base64=audio_base64)
+
+
+# Serve frontend static files — must be mounted LAST so API routes take priority
+_frontend_dir = os.path.join(os.path.dirname(__file__), "..", "..", "frontend")
+_frontend_dir = os.path.realpath(_frontend_dir)
+if os.path.isdir(_frontend_dir):
+    app.mount("/", StaticFiles(directory=_frontend_dir, html=True), name="frontend")
+    print(f"[EduBot] Serving frontend static files from: {_frontend_dir}")
