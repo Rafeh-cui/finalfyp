@@ -9,5 +9,6 @@ dependencies = [
     "gtts>=2.5.4",
     "langdetect>=1.0.9",
     "pydantic>=2.12.5",
+    "scikit-learn>=1.8.0",
     "uvicorn[standard]>=0.44.0",
 ]
