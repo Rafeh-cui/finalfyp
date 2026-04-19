@@ -6,11 +6,14 @@ import io
 import json
 import os
 import re
+import threading
+import time
 from collections import OrderedDict
+from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -40,88 +43,34 @@ _QW_UR = re.compile(
 )
 
 _SYNONYMS: dict[str, str] = {
-    "fees": "fee",
-    "tuition": "fee",
-    "fee structure": "fee structure",
-    "scholarships": "scholarship",
-    "scholarship": "scholarship",
-    "financial aid": "scholarship",
-    "apply": "admission",
-    "application": "admission",
-    "applications": "admission",
-    "admissions": "admission",
-    "enroll": "admission",
-    "enrolment": "admission",
-    "eligibility": "admission",
-    "requirements": "admission",
-    "criteria": "admission",
-    "hostel": "accommodation",
-    "hostels": "accommodation",
-    "dormitory": "accommodation",
-    "transport": "transport",
-    "bus": "transport",
-    "transportation": "transport",
-    "conveyance": "transport",
-    "contact": "contact",
-    "phone": "contact",
-    "email": "contact",
-    "address": "contact",
-    "location": "contact",
-    "whatsapp": "contact",
-    "faculty": "faculty",
-    "professor": "faculty",
-    "teacher": "faculty",
-    "lecturer": "faculty",
-    "staff": "faculty",
-    "hod": "faculty",
-    "programs": "program",
-    "programme": "program",
-    "programmes": "program",
-    "degree": "program",
-    "degrees": "program",
-    "courses": "course",
-    "grading": "grade",
-    "gpa": "grade",
-    "cgpa": "grade",
-    "grades": "grade",
-    "result": "grade",
-    "results": "grade",
-    "exam": "examination",
-    "exams": "examination",
-    "test": "examination",
-    "tests": "examination",
-    "midterm": "examination",
-    "final": "examination",
-    "library": "library",
-    "lab": "laboratory",
-    "labs": "laboratory",
-    "laboratories": "laboratory",
-    "laboratory": "laboratory",
-    "computer science": "cs",
-    "electrical engineering": "ee",
-    "computer engineering": "ce",
-    "management sciences": "management",
-    "management science": "management",
-    "mathematics": "math",
-    "maths": "math",
-    "bs": "undergraduate",
-    "bscs": "undergraduate cs",
-    "bachelor": "undergraduate",
-    "bachelors": "undergraduate",
-    "ms": "graduate",
-    "masters": "graduate",
-    "master": "graduate",
-    "phd": "doctoral",
-    "doctorate": "doctoral",
-    "research": "research",
-    "thesis": "research",
-    "dissertation": "research",
-    "society": "society",
-    "societies": "society",
-    "club": "society",
-    "clubs": "society",
-    "events": "event",
-    "activities": "event",
+    "fees": "fee", "tuition": "fee", "fee structure": "fee structure",
+    "scholarships": "scholarship", "scholarship": "scholarship",
+    "financial aid": "scholarship", "apply": "admission",
+    "application": "admission", "applications": "admission",
+    "admissions": "admission", "enroll": "admission", "enrolment": "admission",
+    "eligibility": "admission", "requirements": "admission", "criteria": "admission",
+    "hostel": "accommodation", "hostels": "accommodation", "dormitory": "accommodation",
+    "transport": "transport", "bus": "transport", "transportation": "transport",
+    "conveyance": "transport", "contact": "contact", "phone": "contact",
+    "email": "contact", "address": "contact", "location": "contact",
+    "whatsapp": "contact", "faculty": "faculty", "professor": "faculty",
+    "teacher": "faculty", "lecturer": "faculty", "staff": "faculty", "hod": "faculty",
+    "programs": "program", "programme": "program", "programmes": "program",
+    "degree": "program", "degrees": "program", "courses": "course",
+    "grading": "grade", "gpa": "grade", "cgpa": "grade", "grades": "grade",
+    "result": "grade", "results": "grade", "exam": "examination",
+    "exams": "examination", "test": "examination", "tests": "examination",
+    "midterm": "examination", "final": "examination", "library": "library",
+    "lab": "laboratory", "labs": "laboratory", "laboratories": "laboratory",
+    "laboratory": "laboratory", "computer science": "cs", "electrical engineering": "ee",
+    "computer engineering": "ce", "management sciences": "management",
+    "management science": "management", "mathematics": "math", "maths": "math",
+    "bs": "undergraduate", "bscs": "undergraduate cs", "bachelor": "undergraduate",
+    "bachelors": "undergraduate", "ms": "graduate", "masters": "graduate",
+    "master": "graduate", "phd": "doctoral", "doctorate": "doctoral",
+    "research": "research", "thesis": "research", "dissertation": "research",
+    "society": "society", "societies": "society", "club": "society", "clubs": "society",
+    "events": "event", "activities": "event",
 }
 
 
@@ -131,8 +80,7 @@ def _normalize(text: str) -> str:
     t = _QW_EN.sub(" ", t)
     t = _QW_UR.sub(" ", t)
     words = t.split()
-    mapped = []
-    i = 0
+    mapped, i = [], 0
     while i < len(words):
         if i + 1 < len(words):
             bigram = words[i] + " " + words[i + 1]
@@ -140,12 +88,9 @@ def _normalize(text: str) -> str:
                 mapped.append(_SYNONYMS[bigram])
                 i += 2
                 continue
-        word = words[i]
-        mapped.append(_SYNONYMS.get(word, word))
+        mapped.append(_SYNONYMS.get(words[i], words[i]))
         i += 1
-    t = " ".join(mapped)
-    t = re.sub(r"\s+", " ", t).strip()
-    return t
+    return re.sub(r"\s+", " ", " ".join(mapped)).strip()
 
 
 # ---------------------------------------------------------------------------
@@ -168,6 +113,7 @@ class DatasetKnowledgeBase:
     """Triple-scored knowledge base: BM25 (35%) + word TF-IDF (45%) + char TF-IDF (20%)."""
 
     def __init__(self, dataset_path: str):
+        self.dataset_path = dataset_path
         self.qa_pairs: list[dict] = []
         self.questions: list[str] = []
         self.norm_questions: list[str] = []
@@ -177,23 +123,25 @@ class DatasetKnowledgeBase:
         self._word_vec = None
         self._word_mat = None
         self._ready = False
-        self._load(dataset_path)
+        self._lock = threading.Lock()
+        self._load()
 
-    def _load(self, path: str):
+    def _load(self):
         try:
-            with open(path, encoding="utf-8") as f:
+            with open(self.dataset_path, encoding="utf-8") as f:
                 data = json.load(f)
-            self.qa_pairs = [
+            pairs = [
                 {"input": d["input"].strip(), "output": d["output"].strip()}
                 for d in data
                 if d.get("input") and d.get("output")
             ]
-            self.questions = [d["input"] for d in self.qa_pairs]
+            self.qa_pairs = pairs
+            self.questions = [d["input"] for d in pairs]
             self.norm_questions = [_normalize(q) for q in self.questions]
             self._build_index()
             print(f"[EduBot] Dataset loaded: {len(self.qa_pairs)} Q&A pairs.")
         except Exception as e:
-            print(f"[EduBot] WARNING: Failed to load dataset ({e}). Dataset fallback disabled.")
+            print(f"[EduBot] WARNING: Failed to load dataset ({e}).")
 
     def _build_index(self):
         try:
@@ -204,20 +152,52 @@ class DatasetKnowledgeBase:
             self._bm25 = BM25Okapi(tokenized)
 
             self._char_vec = TfidfVectorizer(
-                analyzer="char_wb", ngram_range=(2, 4),
-                max_features=10000, sublinear_tf=True,
-            )
+                analyzer="char_wb", ngram_range=(2, 4), max_features=10000, sublinear_tf=True)
             self._char_mat = self._char_vec.fit_transform(self.norm_questions)
 
             self._word_vec = TfidfVectorizer(
-                analyzer="word", ngram_range=(1, 3),
-                max_features=10000, sublinear_tf=True,
-            )
+                analyzer="word", ngram_range=(1, 3), max_features=10000, sublinear_tf=True)
             self._word_mat = self._word_vec.fit_transform(self.norm_questions)
 
             self._ready = True
         except Exception as e:
             print(f"[EduBot] WARNING: Index build failed ({e}).")
+
+    def reload(self):
+        """Hot-reload dataset from disk and rebuild index (thread-safe)."""
+        with self._lock:
+            self._ready = False
+            self._load()
+        _response_cache.clear()
+        print("[EduBot] Dataset reloaded and cache cleared.")
+
+    def add_pair(self, question: str, answer: str) -> bool:
+        """Append a new Q&A pair to dataset.json and hot-reload. Returns True on success."""
+        question, answer = question.strip(), answer.strip()
+        if not question or not answer:
+            return False
+        # Deduplicate: skip if very similar question already exists
+        if self._ready:
+            existing = self.find_similar(question, top_k=1, min_score=0.70)
+            if existing:
+                return False   # Already covered
+
+        try:
+            with open(self.dataset_path, encoding="utf-8") as f:
+                data = json.load(f)
+            data.append({
+                "input": question,
+                "output": answer,
+                "instruction": "You are an expert assistant for COMSATS University Islamabad, Attock Campus.",
+            })
+            with open(self.dataset_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            self.reload()
+            print(f"[EduBot] New Q&A saved and dataset reloaded. Total: {len(self.qa_pairs)}")
+            return True
+        except Exception as e:
+            print(f"[EduBot] ERROR saving Q&A: {e}")
+            return False
 
     def _scores(self, query: str):
         import numpy as np
@@ -245,32 +225,53 @@ class DatasetKnowledgeBase:
             import numpy as np
             scores = self._scores(query)
             top_indices = np.argsort(scores)[::-1][:top_k]
-            results = []
-            for idx in top_indices:
-                score = float(scores[idx])
-                if score >= min_score:
-                    results.append({
-                        "input": self.qa_pairs[idx]["input"],
-                        "output": self.qa_pairs[idx]["output"],
-                        "score": round(score, 4),
-                    })
-            return results
+            return [
+                {"input": self.qa_pairs[i]["input"],
+                 "output": self.qa_pairs[i]["output"],
+                 "score": round(float(scores[i]), 4)}
+                for i in top_indices
+                if float(scores[i]) >= min_score
+            ]
         except Exception:
             return []
 
     def best_answer(self, query: str, min_score: float = 0.45) -> Optional[str]:
         results = self.find_similar(query, top_k=1, min_score=min_score)
-        if results:
-            return results[0]["output"]
-        return None
+        return results[0]["output"] if results else None
 
 
 _dataset_path = os.path.join(os.path.dirname(__file__), "dataset.json")
 kb = DatasetKnowledgeBase(_dataset_path)
 
+# ---------------------------------------------------------------------------
+# Unknown-question log  (persisted to disk)
+# ---------------------------------------------------------------------------
+
+_UNKNOWN_PATH = os.path.join(os.path.dirname(__file__), "unknown_questions.json")
+_unknown_lock = threading.Lock()
+
+
+def _load_unknown() -> list[dict]:
+    try:
+        with open(_UNKNOWN_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def _save_unknown(entry: dict) -> None:
+    with _unknown_lock:
+        data = _load_unknown()
+        # Don't duplicate exact same question
+        if any(d["question"] == entry["question"] for d in data):
+            return
+        data.append(entry)
+        with open(_UNKNOWN_PATH, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
 
 # ---------------------------------------------------------------------------
-# Response cache  (LRU, max 120 entries, keyed by normalised question)
+# Response cache  (LRU, max 120 entries)
 # ---------------------------------------------------------------------------
 
 _CACHE_MAX = 120
@@ -285,9 +286,8 @@ def _cache_get(key: str) -> Optional[tuple[str, str]]:
 
 
 def _cache_put(key: str, value: tuple[str, str]) -> None:
-    if key in _response_cache:
-        _response_cache.move_to_end(key)
     _response_cache[key] = value
+    _response_cache.move_to_end(key)
     if len(_response_cache) > _CACHE_MAX:
         _response_cache.popitem(last=False)
 
@@ -297,6 +297,7 @@ def _cache_put(key: str, value: tuple[str, str]) -> None:
 # ---------------------------------------------------------------------------
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "edubot-admin-2025")
 
 SYSTEM_PROMPT_TEMPLATE = """You are EduBot — the official AI assistant for COMSATS University Islamabad, Attock Campus.
 
@@ -364,7 +365,6 @@ def _synthesize_audio(text: str, language: Optional[str] = "en") -> Optional[str
     lang = language or "en"
     if lang not in {"en", "ur"}:
         lang = "en"
-    # Trim very long answers to keep TTS fast
     words = text.split()
     if len(words) > 80:
         text = " ".join(words[:80]) + "…"
@@ -378,6 +378,19 @@ def _synthesize_audio(text: str, language: Optional[str] = "en") -> Optional[str
         return None
 
 
+# Phrases that indicate the bot doesn't know the answer (used for auto-learn logic)
+_FALLBACK_PHRASES = [
+    "contact comsats", "contact us", "057-9316330", "couldn't find",
+    "i don't know", "i'm not sure", "please contact",
+    "مجھے معلوم نہیں", "057", "رابطہ کریں",
+]
+
+
+def _is_fallback_answer(text: str) -> bool:
+    t = text.lower()
+    return any(p in t for p in _FALLBACK_PHRASES)
+
+
 # ---------------------------------------------------------------------------
 # Core response generation
 # ---------------------------------------------------------------------------
@@ -388,10 +401,7 @@ def _build_system_prompt(question: str) -> str:
 
     similar = kb.find_similar(question, top_k=6, min_score=0.12)
     if similar:
-        qa_text = "\n\n".join(
-            f"Q: {item['input']}\nA: {item['output']}"
-            for item in similar
-        )
+        qa_text = "\n\n".join(f"Q: {r['input']}\nA: {r['output']}" for r in similar)
         context = DATASET_CONTEXT_TEMPLATE.format(qa_pairs=qa_text)
     else:
         context = "\n(No matching knowledge base entries found. Answer from general COMSATS Attock knowledge only.)"
@@ -402,17 +412,11 @@ def _call_gemini(question: str, model_name: str, history: list[dict]) -> str:
     from google.genai import types as _types
 
     system_prompt = _build_system_prompt(question)
-
-    # Build multi-turn contents list
     contents: list = []
-    for turn in history[-6:]:  # Keep last 3 exchanges (6 turns)
+    for turn in history[-6:]:
         role = "user" if turn.get("role") == "user" else "model"
-        contents.append(
-            _types.Content(role=role, parts=[_types.Part(text=turn.get("content", ""))])
-        )
-    contents.append(
-        _types.Content(role="user", parts=[_types.Part(text=question)])
-    )
+        contents.append(_types.Content(role=role, parts=[_types.Part(text=turn.get("content", ""))]))
+    contents.append(_types.Content(role="user", parts=[_types.Part(text=question)]))
 
     response = gemini_client.models.generate_content(
         model=model_name,
@@ -449,29 +453,21 @@ def _dataset_answer(question: str) -> str:
 
     if best["score"] >= 0.50:
         return best["output"]
-
     if best["score"] >= 0.35:
         if second is None or best["score"] > second["score"] * 1.25:
             return best["output"]
-        if lang == "ur":
-            intro = "آپ کے سوال سے متعلق یہ معلومات ملی ہیں:"
-        else:
-            intro = "Here's what I found related to your question:"
+        intro = "آپ کے سوال سے متعلق یہ معلومات ملی ہیں:" if lang == "ur" else "Here's what I found:"
         return intro + "\n\n" + "\n\n".join(f"• {r['output']}" for r in similar[:2])
-
     if best["score"] >= 0.20:
         if second is None or best["score"] > second["score"] * 1.30:
             return best["output"]
-        if lang == "ur":
-            caveat = "شاید آپ یہ جاننا چاہتے ہیں:\n\n"
-        else:
-            caveat = "You might be asking about:\n\n"
+        caveat = "شاید آپ یہ جاننا چاہتے ہیں:\n\n" if lang == "ur" else "You might be asking about:\n\n"
         return caveat + best["output"]
 
     if lang == "ur":
         return ("معذرت، مجھے یقینی جواب نہیں مل سکا۔ "
                 "براہ کرم 057-9316330 پر کال کریں یا [email protected] پر ای میل کریں۔")
-    return ("I'm sorry, I couldn't find a confident answer to that question. "
+    return ("I'm sorry, I couldn't find a confident answer. "
             "Please contact COMSATS Attock Campus at 057-9316330 or email [email protected].")
 
 
@@ -480,22 +476,22 @@ def _generate_response(
     history: list[dict],
     want_audio: bool,
 ) -> tuple[str, str, Optional[str]]:
-    """Try Gemini first; fall back to dataset. Cache answers by normalised question."""
     cache_key = _normalize(question)
 
-    # Cache hit (only for stateless queries — skip if there's active history)
+    # Cache hit (stateless queries only)
     if not history:
         cached = _cache_get(cache_key)
         if cached:
             answer, language = cached
             audio = _synthesize_audio(answer, language) if want_audio else None
-            print(f"[EduBot] Cache hit for: {question[:60]}")
+            print(f"[EduBot] Cache hit: {question[:60]}")
             return answer, language, audio
 
-    transient_codes = [
-        "429", "503", "RESOURCE_EXHAUSTED", "UNAVAILABLE",
-        "quota", "rate", "overload", "capacity",
-    ]
+    # Check dataset confidence BEFORE calling Gemini
+    top_matches = kb.find_similar(question, top_k=1, min_score=0.0)
+    dataset_confidence = top_matches[0]["score"] if top_matches else 0.0
+
+    transient_codes = ["429", "503", "RESOURCE_EXHAUSTED", "UNAVAILABLE", "quota", "rate", "overload"]
 
     if GEMINI_AVAILABLE and gemini_client:
         models_to_try = ["gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash"]
@@ -503,14 +499,33 @@ def _generate_response(
             try:
                 answer = _call_gemini(question, model_name, history)
                 language = _detect_language(answer)
+
+                # ── Auto-learn: question not well-covered in dataset ─────────
+                if (dataset_confidence < 0.25
+                        and not _is_greeting(question)
+                        and not _is_fallback_answer(answer)
+                        and len(answer) > 40):
+                    saved = kb.add_pair(question, answer)
+                    if saved:
+                        print(f"[EduBot] Auto-learned new Q&A. Dataset now: {len(kb.qa_pairs)}")
+
+                # ── Log if Gemini also fell back to "contact us" ─────────────
+                elif _is_fallback_answer(answer) and not _is_greeting(question):
+                    _save_unknown({
+                        "question": question,
+                        "confidence": round(dataset_confidence, 3),
+                        "timestamp": datetime.utcnow().isoformat(),
+                    })
+                    print(f"[EduBot] Logged unknown question: {question[:60]}")
+
                 if not history:
                     _cache_put(cache_key, (answer, language))
                 audio = _synthesize_audio(answer, language) if want_audio else None
                 print(f"[EduBot] Answered via Gemini ({model_name})")
                 return answer, language, audio
+
             except Exception as e:
-                error_str = str(e)
-                if any(code in error_str for code in transient_codes):
+                if any(code in str(e) for code in transient_codes):
                     continue
                 print(f"[EduBot] Gemini error ({model_name}): {e}")
                 break
@@ -519,6 +534,15 @@ def _generate_response(
 
     answer = _dataset_answer(question)
     language = _detect_language(answer)
+
+    # Log unknown question in dataset-only mode too
+    if _is_fallback_answer(answer) and not _is_greeting(question):
+        _save_unknown({
+            "question": question,
+            "confidence": round(dataset_confidence, 3),
+            "timestamp": datetime.utcnow().isoformat(),
+        })
+
     if not history:
         _cache_put(cache_key, (answer, language))
     audio = _synthesize_audio(answer, language) if want_audio else None
@@ -530,7 +554,7 @@ def _generate_response(
 # FastAPI application
 # ---------------------------------------------------------------------------
 
-app = FastAPI(title="EduBot Backend", version="5.0.0")
+app = FastAPI(title="EduBot Backend", version="5.1.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -558,15 +582,23 @@ class NoCacheMiddleware(BaseHTTPMiddleware):
 app.add_middleware(NoCacheMiddleware)
 
 
+# ── Admin key guard ───────────────────────────────────────────────────────────
+def _require_admin(x_admin_key: str = Header(...)):
+    if x_admin_key != ADMIN_KEY:
+        raise HTTPException(status_code=403, detail="Invalid admin key.")
+    return True
+
+
+# ── Pydantic models ───────────────────────────────────────────────────────────
 class HistoryTurn(BaseModel):
-    role: str      # "user" or "bot"
+    role: str
     content: str
 
 
 class ChatRequest(BaseModel):
     question: str
     history: List[HistoryTurn] = []
-    want_audio: bool = False   # Frontend uses Web Speech API by default
+    want_audio: bool = False
 
 
 class ChatResponse(BaseModel):
@@ -576,6 +608,12 @@ class ChatResponse(BaseModel):
     source: Optional[str] = None
 
 
+class AddQARequest(BaseModel):
+    question: str
+    answer: str
+
+
+# ── Public endpoints ──────────────────────────────────────────────────────────
 @app.get("/health", tags=["System"])
 async def health_check() -> dict:
     return {
@@ -584,6 +622,7 @@ async def health_check() -> dict:
         "dataset_loaded": kb._ready,
         "dataset_size": len(kb.qa_pairs),
         "cache_size": len(_response_cache),
+        "unknown_questions": len(_load_unknown()),
     }
 
 
@@ -599,25 +638,74 @@ async def chat(request: ChatRequest) -> ChatResponse:
         raise HTTPException(status_code=400, detail="Question must not be empty.")
 
     history = [{"role": t.role, "content": t.content} for t in request.history]
-    want_audio = request.want_audio
-
     loop = asyncio.get_event_loop()
     try:
         answer, language, audio_base64 = await asyncio.wait_for(
-            loop.run_in_executor(
-                None, _generate_response, question, history, want_audio
-            ),
+            loop.run_in_executor(None, _generate_response, question, history, request.want_audio),
             timeout=25.0,
         )
     except asyncio.TimeoutError:
         answer = _dataset_answer(question)
         language = _detect_language(answer)
-        audio_base64 = _synthesize_audio(answer, language) if want_audio else None
+        audio_base64 = _synthesize_audio(answer, language) if request.want_audio else None
 
     return ChatResponse(answer=answer, language=language, audio_base64=audio_base64)
 
 
-# Serve frontend static files — mounted LAST so API routes take priority
+# ── Admin endpoints ────────────────────────────────────────────────────────────
+@app.get("/api/admin/stats", tags=["Admin"])
+async def admin_stats(_: bool = Depends(_require_admin)):
+    return {
+        "dataset_size":       len(kb.qa_pairs),
+        "cache_size":         len(_response_cache),
+        "unknown_count":      len(_load_unknown()),
+        "gemini_available":   GEMINI_AVAILABLE,
+        "dataset_ready":      kb._ready,
+    }
+
+
+@app.get("/api/admin/unknown", tags=["Admin"])
+async def admin_unknown(_: bool = Depends(_require_admin)):
+    return {"unknown_questions": _load_unknown()}
+
+
+@app.post("/api/admin/add-qa", tags=["Admin"])
+async def admin_add_qa(body: AddQARequest, _: bool = Depends(_require_admin)):
+    loop = asyncio.get_event_loop()
+    saved = await loop.run_in_executor(None, kb.add_pair, body.question, body.answer)
+    if not saved:
+        raise HTTPException(status_code=409, detail="A very similar question already exists or input was empty.")
+    return {"success": True, "dataset_size": len(kb.qa_pairs)}
+
+
+@app.post("/api/admin/reload", tags=["Admin"])
+async def admin_reload(_: bool = Depends(_require_admin)):
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, kb.reload)
+    return {"success": True, "dataset_size": len(kb.qa_pairs)}
+
+
+@app.delete("/api/admin/unknown", tags=["Admin"])
+async def admin_clear_unknown(_: bool = Depends(_require_admin)):
+    with _unknown_lock:
+        with open(_UNKNOWN_PATH, "w", encoding="utf-8") as f:
+            json.dump([], f)
+    return {"success": True}
+
+
+@app.delete("/api/admin/unknown/{index}", tags=["Admin"])
+async def admin_delete_unknown(index: int, _: bool = Depends(_require_admin)):
+    with _unknown_lock:
+        data = _load_unknown()
+        if index < 0 or index >= len(data):
+            raise HTTPException(status_code=404, detail="Index out of range.")
+        data.pop(index)
+        with open(_UNKNOWN_PATH, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    return {"success": True, "remaining": len(data)}
+
+
+# Serve frontend static files — mounted LAST
 _frontend_dir = os.path.realpath(
     os.path.join(os.path.dirname(__file__), "..", "..", "frontend")
 )

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduBot — Admin Panel</title>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; background: #0f172a; color: #e2e8f0; }
+    h1,h2,h3,h4,button { font-family: 'Poppins', sans-serif; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 20px; }
+    .stat-card { background: linear-gradient(135deg, #1e3a5f, #1e293b); border: 1px solid #3b5998; border-radius: 14px; padding: 18px; text-align: center; }
+    .badge { display:inline-block; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+    .badge-new { background:#1d4ed8; color:#bfdbfe; }
+    .badge-auto { background:#065f46; color:#a7f3d0; }
+    .badge-ok  { background:#1e3a5f; color:#93c5fd; }
+    input, textarea {
+      background: #0f172a; border: 1px solid #334155; border-radius: 10px;
+      color: #e2e8f0; padding: 10px 14px; width: 100%; font-size: 14px;
+      font-family: 'Roboto', sans-serif;
+    }
+    input:focus, textarea:focus { outline: none; border-color: #3b82f6; }
+    .btn { padding: 9px 20px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s; border: none; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-danger  { background: #dc2626; color: white; }
+    .btn-danger:hover  { background: #b91c1c; }
+    .btn-green   { background: #16a34a; color: white; }
+    .btn-green:hover   { background: #15803d; }
+    .btn-gray    { background: #334155; color: #cbd5e1; }
+    .btn-gray:hover    { background: #475569; }
+    .unknown-item { border: 1px solid #334155; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; background: #0f172a; }
+    .spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; vertical-align:middle; margin-right:6px; }
+    @keyframes spin { to{transform:rotate(360deg);} }
+    .toast { position:fixed; bottom:24px; right:24px; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; z-index:999; opacity:0; transition:opacity 0.3s; }
+    .toast.show { opacity:1; }
+    .toast-ok  { background:#166534; color:#bbf7d0; border:1px solid #22c55e; }
+    .toast-err { background:#7f1d1d; color:#fecaca; border:1px solid #ef4444; }
+    ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:transparent;} ::-webkit-scrollbar-thumb{background:#334155;border-radius:10px;}
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-6">
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="min-h-screen flex items-center justify-center">
+  <div class="card w-full max-w-sm">
+    <div class="flex flex-col items-center mb-6 gap-3">
+      <div class="w-14 h-14 rounded-full bg-white overflow-hidden">
+        <img src="images__3_-removebg-preview.png" alt="EduBot" class="w-full h-full object-cover">
+      </div>
+      <h2 class="text-xl font-bold">EduBot Admin</h2>
+      <p class="text-gray-400 text-sm text-center">Enter your admin key to continue</p>
+    </div>
+    <div id="loginErr" class="hidden mb-3 text-red-400 text-sm text-center bg-red-900/30 border border-red-800/50 rounded-lg px-3 py-2"></div>
+    <form onsubmit="event.preventDefault(); doLogin()">
+      <input id="keyInput" type="password" placeholder="Admin key…" class="mb-3" autocomplete="current-password">
+      <button type="submit" class="btn btn-primary w-full">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="dashboard" class="hidden max-w-4xl mx-auto space-y-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between flex-wrap gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-full bg-white overflow-hidden">
+        <img src="images__3_-removebg-preview.png" alt="EduBot" class="w-full h-full object-cover">
+      </div>
+      <div>
+        <h1 class="text-xl font-bold">EduBot Admin Panel</h1>
+        <p class="text-gray-400 text-xs">COMSATS Attock Campus</p>
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <button class="btn btn-gray" onclick="loadAll()">🔄 Refresh</button>
+      <button class="btn btn-gray" onclick="doLogout()">↩ Logout</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div class="stat-card">
+      <div class="text-3xl font-bold text-blue-400" id="statDataset">—</div>
+      <div class="text-xs text-gray-400 mt-1">Q&amp;A in Dataset</div>
+    </div>
+    <div class="stat-card">
+      <div class="text-3xl font-bold text-red-400" id="statUnknown">—</div>
+      <div class="text-xs text-gray-400 mt-1">Unknown Questions</div>
+    </div>
+    <div class="stat-card">
+      <div class="text-3xl font-bold text-green-400" id="statCache">—</div>
+      <div class="text-xs text-gray-400 mt-1">Cached Answers</div>
+    </div>
+    <div class="stat-card">
+      <div class="text-lg font-bold" id="statGemini">—</div>
+      <div class="text-xs text-gray-400 mt-1">Gemini AI</div>
+    </div>
+  </div>
+
+  <!-- Add Q&A -->
+  <div class="card">
+    <h3 class="font-semibold text-lg mb-4">➕ Add New Question &amp; Answer</h3>
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs text-gray-400 mb-1 block">Question (as a student would ask it)</label>
+        <input id="newQ" type="text" placeholder="e.g. What is the deadline for MS admissions?">
+      </div>
+      <div>
+        <label class="text-xs text-gray-400 mb-1 block">Answer</label>
+        <textarea id="newA" rows="3" placeholder="Type the accurate answer here…"></textarea>
+      </div>
+      <button class="btn btn-green" onclick="addQA()" id="addBtn">Save to Dataset</button>
+    </div>
+  </div>
+
+  <!-- Unknown Questions -->
+  <div class="card">
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <h3 class="font-semibold text-lg">❓ Unknown / Unanswered Questions</h3>
+      <button class="btn btn-danger text-xs py-1.5" onclick="clearUnknown()" id="clearBtn">🗑 Clear All</button>
+    </div>
+    <p class="text-gray-400 text-sm mb-4">
+      These are questions that EduBot couldn't answer well. Add their answers above to teach the bot.
+    </p>
+    <div id="unknownList">
+      <div class="text-center text-gray-500 text-sm py-6">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Reload Dataset -->
+  <div class="card">
+    <h3 class="font-semibold text-lg mb-2">🔁 Force Reload Dataset</h3>
+    <p class="text-gray-400 text-sm mb-4">If you've edited the dataset file directly, use this to reload it live without restarting the server.</p>
+    <button class="btn btn-primary" onclick="reloadDataset()">Reload Now</button>
+  </div>
+
+</div>
+
+<script>
+  let adminKey = '';
+
+  // ── Auth ──────────────────────────────────────────────────────────────────
+  function doLogin() {
+    const key = document.getElementById('keyInput').value.trim();
+    if (!key) return;
+    adminKey = key;
+    loadAll().then(ok => {
+      if (ok) {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+      } else {
+        document.getElementById('loginErr').textContent = 'Invalid admin key. Please try again.';
+        document.getElementById('loginErr').classList.remove('hidden');
+        adminKey = '';
+      }
+    });
+  }
+
+  function doLogout() {
+    adminKey = '';
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('keyInput').value = '';
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────────────────
+  function toast(msg, type = 'ok') {
+    const el = document.getElementById('toast');
+    el.className = `toast toast-${type} show`;
+    el.textContent = msg;
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  // ── API helper ────────────────────────────────────────────────────────────
+  async function api(method, path, body = null) {
+    const opts = {
+      method,
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+    };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(path, opts);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Request failed');
+    return data;
+  }
+
+  // ── Load all data ─────────────────────────────────────────────────────────
+  async function loadAll() {
+    try {
+      const [stats, uq] = await Promise.all([
+        api('GET', '/api/admin/stats'),
+        api('GET', '/api/admin/unknown'),
+      ]);
+      document.getElementById('statDataset').textContent = stats.dataset_size.toLocaleString();
+      document.getElementById('statUnknown').textContent = stats.unknown_count;
+      document.getElementById('statCache').textContent   = stats.cache_size;
+      document.getElementById('statGemini').textContent  = stats.gemini_available ? '✅ Active' : '❌ Off';
+      document.getElementById('statGemini').className    = 'text-lg font-bold ' + (stats.gemini_available ? 'text-green-400' : 'text-red-400');
+      renderUnknown(uq.unknown_questions || []);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // ── Render unknown questions ──────────────────────────────────────────────
+  function renderUnknown(list) {
+    const el = document.getElementById('unknownList');
+    if (!list.length) {
+      el.innerHTML = '<div class="text-center text-gray-500 text-sm py-6">🎉 No unknown questions — the bot is handling everything!</div>';
+      return;
+    }
+    el.innerHTML = list.map((item, idx) => `
+      <div class="unknown-item" id="uq-${idx}">
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex-grow">
+            <p class="font-medium text-sm mb-1">${escHtml(item.question)}</p>
+            <div class="flex gap-2 flex-wrap mt-1">
+              <span class="badge badge-ok">Score: ${item.confidence ?? '?'}</span>
+              <span class="badge badge-new">${(item.timestamp || '').substring(0,10)}</span>
+            </div>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button class="btn btn-green text-xs py-1 px-3"
+              onclick="fillForm('${escAttr(item.question)}')">Teach</button>
+            <button class="btn btn-danger text-xs py-1 px-3"
+              onclick="deleteUnknown(${idx})">✕</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function escAttr(s) {
+    return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  }
+
+  // ── Fill add-form from unknown question ──────────────────────────────────
+  function fillForm(q) {
+    document.getElementById('newQ').value = q;
+    document.getElementById('newA').value = '';
+    document.getElementById('newA').focus();
+    document.getElementById('newQ').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // ── Add Q&A ───────────────────────────────────────────────────────────────
+  async function addQA() {
+    const q = document.getElementById('newQ').value.trim();
+    const a = document.getElementById('newA').value.trim();
+    if (!q || !a) { toast('Please fill in both the question and the answer.', 'err'); return; }
+
+    const btn = document.getElementById('addBtn');
+    btn.innerHTML = '<span class="spinner"></span>Saving…';
+    btn.disabled = true;
+
+    try {
+      const res = await api('POST', '/api/admin/add-qa', { question: q, answer: a });
+      toast(`✅ Saved! Dataset now has ${res.dataset_size.toLocaleString()} Q&A pairs.`);
+      document.getElementById('newQ').value = '';
+      document.getElementById('newA').value = '';
+      await loadAll();
+    } catch (e) {
+      toast(e.message || 'Failed to save.', 'err');
+    } finally {
+      btn.textContent = 'Save to Dataset';
+      btn.disabled = false;
+    }
+  }
+
+  // ── Delete single unknown question ────────────────────────────────────────
+  async function deleteUnknown(idx) {
+    try {
+      await api('DELETE', `/api/admin/unknown/${idx}`);
+      toast('Question removed.');
+      await loadAll();
+    } catch (e) {
+      toast('Failed to delete.', 'err');
+    }
+  }
+
+  // ── Clear all unknown questions ───────────────────────────────────────────
+  async function clearUnknown() {
+    if (!confirm('Clear all unknown questions?')) return;
+    const btn = document.getElementById('clearBtn');
+    btn.disabled = true;
+    try {
+      await api('DELETE', '/api/admin/unknown');
+      toast('All unknown questions cleared.');
+      await loadAll();
+    } catch (e) {
+      toast('Failed to clear.', 'err');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // ── Force reload dataset ──────────────────────────────────────────────────
+  async function reloadDataset() {
+    try {
+      const res = await api('POST', '/api/admin/reload');
+      toast(`✅ Dataset reloaded — ${res.dataset_size.toLocaleString()} Q&A pairs.`);
+      await loadAll();
+    } catch (e) {
+      toast('Reload failed.', 'err');
+    }
+  }
+</script>
+</body>
+</html>
