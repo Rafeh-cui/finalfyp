@@ -5509,7 +5509,7 @@
     "output": "I worry about being judged if I seek counseling or other mental health help at COMSATS: Agree.",
     "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
-   {
+  {
     "input": "Do financial difficulties make it harder for you to focus on studying at COMSATS?",
     "output": "Financial difficulties make it harder for me to focus on studying at COMSATS: Agree.",
     "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
@@ -5569,7 +5569,6 @@
     "output": " Yes, uncertainty over funding, publication, and future career causes mental distress for many PhD students: Agree.",
     "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
-  
   {
     "input": " I feel stressed because of too many assignments and Quizez at the same time. What can I do?",
     "output": " Try breaking tasks into smaller steps; use a planner to schedule assignments over the semester and give yourself mini-breaks.",
@@ -5893,7 +5892,7 @@
   {
     "input": " when we sick during exams,can comsats university has policy to retake exams",
     "output": " yes comsats attock campus has retake exam policy for student convenience",
-    "instruction":"You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
     "input": " I never have enough time for rest or hobbies because of classes, assignments, labs  I feel burnt out. Is burnout common?",
@@ -5905,25 +5904,25 @@
     "output": " Develop transferable skills, network with professionals, look for internships, and keep backup plans.",
     "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
- {
+  {
     "input": " Living away from family in hostel makes me feel lonely and depressed. What helps with that feeling?",
     "output": " Stay in contact with home, join  study groups, build friendships on campus, share feelings with trusted people.",
     "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
-    "input":" what type of cloths wear comsats attock students",
-    "output":" In comsats Attock almost all men and women wear shalwar kameez. However trend of modern clothing can be seen among few men.",
+    "input": " what type of cloths wear comsats attock students",
+    "output": " In comsats Attock almost all men and women wear shalwar kameez. However trend of modern clothing can be seen among few men.",
     "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
     "input": " Are many students from rural or remote areas enrolled at COMSATS Attock, or do most come from urban backgrounds",
     "output": "The majority of people of comsats Attock belong to middle class.",
-    "instruction":  "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
     "input": "Do students at Attock participate in volleyball matches or tournaments regularly on campus?",
     "output": "The major games played are Cricket, Volleyball and in the villages Kabaddi and Gully danda are the part of sport activities.",
-    "instruction":  "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
     "input": " Does COMSATS Attock provide separate sports facilities like cricket and football grounds for students?",
@@ -6293,12 +6292,12 @@
   {
     "input": "does any environmental protection society",
     "output": "yes,comsats attock campus has environment protection society",
-    "instruction":"You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
     "input": "what is the purpose of this society ",
-    "output":"To take care of plants",
-    "instruction":"You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+    "output": "To take care of plants",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
     "input": " How many major societies are there at COMSATS Attock campus?",
@@ -6313,12 +6312,12 @@
   {
     "input": "what is the purpose of welfare society",
     "output": "welfare society is dedicated to serving the community through impactful welfare intuitives,social work and volunteers-driven projects",
-    "instruction":"You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
     "input": "what to do in arts Nexus",
     "output": "This event will feature an Art Exhibition,along with a sketching competitions,Treasure Hunt and digital gaming",
-    "instruction":"You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   },
   {
     "input": " Does COMSATS Attock campus provide parking space for students inside the campus?",
@@ -6558,17 +6557,17 @@
   {
     "input": "how many foods available at cafeteria",
     "output": "There are many food available like,chart,biriyani,samosa chart,tea,chana chart,macroni,burger,fresh juices etc",
-    "instruction":"You are an expert agent. Answer in English if the question is in English, or Urdu if it is in Urdu. Keep answers conversational and to the point."
+    "instruction": "You are an expert agent. Answer in English if the question is in English, or Urdu if it is in Urdu. Keep answers conversational and to the point."
   },
   {
     "input": " what is the price of biriyani",
     "output": " The price of biriyani is 290",
-    "instruction":"You are an expert agent. Answer in English if the question is in English, or Urdu if it is in Urdu. Keep answers conversational and to the point."
+    "instruction": "You are an expert agent. Answer in English if the question is in English, or Urdu if it is in Urdu. Keep answers conversational and to the point."
   },
   {
     "input": " what is the price of samosa chart",
     "output": " The price of samosa chart is 100 rupees",
-    "instruction":"You are an expert agent. Answer in English if the question is in English, or Urdu if it is in Urdu. Keep answers conversational and to the point."
+    "instruction": "You are an expert agent. Answer in English if the question is in English, or Urdu if it is in Urdu. Keep answers conversational and to the point."
   },
   {
     "input": " Does the COMSATS Attock library provide a quiet space for study?",
@@ -6633,7 +6632,7 @@
   {
     "input": " libraries has only study material",
     "output": "No library provide other than study books material",
-    "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
   },
   {
     "input": " Is the silence-area provided for group discussions?",
@@ -6671,35 +6670,35 @@
     "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
   },
   {
-  "input": " where library is located in campus?",
-  "output": " library is located in cs(computer science) building at last floor",
-  "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
-},
-{
-  "input": "can i issue books from library",
-  "output": "yes you can issue books from library",
-  "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
-},
-{
-  "input": "What is the phone number for the library at COMSATS Attock?",
-  "output": "+92-57- 9316330-1,+92-57-2541386,FAX: +92-57-9316329",
-"instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
-},
-{
-  "input": "Does the library include general books",
-  "output":"Yes, it has about 400 general books.",
-  "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
-},
-{
-  "input": "can i Re-issue book from library?",
-  "output": "yes,you can re-issue book from library after deadline",
-  "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
-},
-{
-  "input": "can i apply as a international student?",
-  "output": "yes,you can apply as a international student",
-  "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
-},
+    "input": " where library is located in campus?",
+    "output": " library is located in cs(computer science) building at last floor",
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+  },
+  {
+    "input": "can i issue books from library",
+    "output": "yes you can issue books from library",
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+  },
+  {
+    "input": "What is the phone number for the library at COMSATS Attock?",
+    "output": "+92-57- 9316330-1,+92-57-2541386,FAX: +92-57-9316329",
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+  },
+  {
+    "input": "Does the library include general books",
+    "output": "Yes, it has about 400 general books.",
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+  },
+  {
+    "input": "can i Re-issue book from library?",
+    "output": "yes,you can re-issue book from library after deadline",
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+  },
+  {
+    "input": "can i apply as a international student?",
+    "output": "yes,you can apply as a international student",
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+  },
   {
     "input": "  COMSATS Attock reserve special seats for international students?",
     "output": " Yes, special seats are reserved for foreign students in each discipline: Agree.",
@@ -6761,9 +6760,9 @@
     "instruction": "You are an expert agent. If the question is in English, answer in English; if in Urdu, answer in Urdu. Keep responses clear and conversational."
   },
   {
-    "input":"How to contact IBCC office",
-    "output":"you can contact via  Tel: 051-9235017.",
-    "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+    "input": "How to contact IBCC office",
+    "output": "you can contact via  Tel: 051-9235017.",
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
   },
   {
     "input": " Do international students need to follow HEC visa guidelines after admission?",
@@ -6798,12 +6797,12 @@
   {
     "input": " how i get full information as a international student?",
     "output": " you can visit this website for more information  http://ww3.comsats.edu.pk/internationalstudents/",
-    "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
   },
   {
     "input": "can i apply for PMs Youth Laptop as a comsats student",
-    "output":" yes you can apply for prime minister youth laptop scheme",
-    "instruction":"You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
+    "output": " yes you can apply for prime minister youth laptop scheme",
+    "instruction": "You are an expert agent. Answer in English if asked in English, or in Urdu if asked in Urdu. Provide to-the-point, conversational answers."
   },
   {
     "input": " Does OPTRIC focus on large-scale optimization problems?",
@@ -6871,89 +6870,89 @@
     "instruction": "You are an expert agent. Answer clearly in English (or Urdu if asked in Urdu)."
   },
   {
-    "input":"Can students get an interest-free loan (Qarz-e-Hasna) from CUI",
-    "output":"Yes, after their first semester, students with good academic standing and attendance can apply for Qarz-e-Hasna.",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": "Can students get an interest-free loan (Qarz-e-Hasna) from CUI",
+    "output": "Yes, after their first semester, students with good academic standing and attendance can apply for Qarz-e-Hasna.",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-    "input":"Is there financial support for siblings studying simultaneously at COMSATS?",
-    "output":"Yes, there is a Siblings Pecuniary support (fee concession) for students whose siblings are also enrolled and whose parents cannot afford the fees",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": "Is there financial support for siblings studying simultaneously at COMSATS?",
+    "output": "Yes, there is a Siblings Pecuniary support (fee concession) for students whose siblings are also enrolled and whose parents cannot afford the fees",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-     "input":" Does Punjab Benevolent Fund (PBF) offer educational scholarships for children of Punjab government employees?",
-     "output":"Yes, PBF offers educational scholarships to children of government employees in Punjab.",
-     "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": " Does Punjab Benevolent Fund (PBF) offer educational scholarships for children of Punjab government employees?",
+    "output": "Yes, PBF offers educational scholarships to children of government employees in Punjab.",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
- {
-  "input":"Is there a requirement of minimum marks for Punjab Benevolent Fund scholarships?",
-  "output":"Yes, students generally need at least 60% marks in the previous exam for eligibility.",
-  "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
- },
- {
-  "input":"Can children of retired government employees apply for PBF scholarships?",
-  "output":"Yes, children of both serving and retired government servants are eligible.",
-  "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
- },
+  {
+    "input": "Is there a requirement of minimum marks for Punjab Benevolent Fund scholarships?",
+    "output": "Yes, students generally need at least 60% marks in the previous exam for eligibility.",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+  },
+  {
+    "input": "Can children of retired government employees apply for PBF scholarships?",
+    "output": "Yes, children of both serving and retired government servants are eligible.",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+  },
   {
     "input": " Is the Higher Education Commission (HEC) Need-Based Scholarship available to students at Attock campus?",
     "output": "Yes, HEC Need-Based Scholarship is mentioned in Attock scholarship listings. : Agree.",
     "instruction": "You are an expert agent. Answer clearly in English (or Urdu if asked in Urdu)."
   },
   {
-    "input":" How to apply for peef scholarship",
-    "output":" you can apply through the following link https://student.peef.org.pk/",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": " How to apply for peef scholarship",
+    "output": " you can apply through the following link https://student.peef.org.pk/",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-    "input":"Does COMSATS Attock provide internal “Merit Scholarship” for BS (BA, BBS) programs?",
-    "output":"Yes, there is a 50% tuition fee scholarship for BS (BA) and BBS programs, with the condition to maintain a CGPA of 2.50 in subsequent semesters.",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": "Does COMSATS Attock provide internal “Merit Scholarship” for BS (BA, BBS) programs?",
+    "output": "Yes, there is a 50% tuition fee scholarship for BS (BA) and BBS programs, with the condition to maintain a CGPA of 2.50 in subsequent semesters.",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-    "input":"What is the parental income limit for PEEF Master Level Scholarship?",
-    "output":"Not more than PKR 60,000 per month (with some exemptions, e.g. children of BPS-1-4 government servants or students whose parents have been martyred)",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": "What is the parental income limit for PEEF Master Level Scholarship?",
+    "output": "Not more than PKR 60,000 per month (with some exemptions, e.g. children of BPS-1-4 government servants or students whose parents have been martyred)",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-    "input":"How to apply for Punjab Benevolent Fund (PBF) Educational Scholarship?",
-    "output":"Download the prescribed form, fill it out, attach required documents (CNIC, payslip/pension book, detailed marks certificate), get it attested by head of institute/department, and submit it via proper channel to the Benevolent Fund Board.",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": "How to apply for Punjab Benevolent Fund (PBF) Educational Scholarship?",
+    "output": "Download the prescribed form, fill it out, attach required documents (CNIC, payslip/pension book, detailed marks certificate), get it attested by head of institute/department, and submit it via proper channel to the Benevolent Fund Board.",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-    "input":" who is the current HOD of CS department?",
-    "output":" current HOD of cs department is Dr. Zahoor-ur-Rehman Tanoli ",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": " who is the current HOD of CS department?",
+    "output": " current HOD of cs department is Dr. Zahoor-ur-Rehman Tanoli ",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
     "input": "what is the designation of Dr. zahoor-ur-Rehman?",
     "output": "He currently served as a Associate Professor ",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-    "input":"what is the Email address of Hod of cs department?",
-    "output":" xahoor@ciit-attock.edu.pk",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": "what is the Email address of Hod of cs department?",
+    "output": " xahoor@ciit-attock.edu.pk",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
     "input": "what is the primary expertise area of dr.zahoor-ur-rehman?",
     "output": "data mining,machine learning,project management",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
     "input": "Who is the Head of Department (HoD) of Management Sciences at CUI Attock?",
     "output": "Dr. Faisal Shahzad is the HoD / Associate Professor of Management Sciences at CUI Attock.",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-    "input":"What is Dr. Faisal Shahzad email address?",
-    "output":"muhammadfaisal@ciit-attock.edu.pk",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": "What is Dr. Faisal Shahzad email address?",
+    "output": "muhammadfaisal@ciit-attock.edu.pk",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
-    "input":"What is the contact number for Dr. Faisal Shahzad?",
-    "output":" 0579049205",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "input": "What is the contact number for Dr. Faisal Shahzad?",
+    "output": " 0579049205",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
     "input": "Is Dr. Faisal Shahzad research interest in corporate governance and finance?",
@@ -6975,7 +6974,7 @@
     "output": "  He joined as a lecturer in August 2007: Agree.",
     "instruction": "You are an expert agent. Answer in the language of the question (English/Urdu). Be conversational and concise."
   },
-   {
+  {
     "input": " Was Dr. Shahzad a literacy coordinator at NCHD?",
     "output": " Yes, he worked as a literacy coordinator for NCHD: Agree.",
     "instruction": "You are an expert agent. Answer in the language of the question (English/Urdu). Be conversational and concise."
@@ -6983,12 +6982,12 @@
   {
     "input": "where dr .faisal shahzad did Ms degree from ",
     "output": " Dr faisal shahzad received his Ms degree from iqra university,islamabad campus",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
     "input": "what is the post assigned to dr.faisal shahzad?",
     "output": "Associate professor",
-    "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
   },
   {
     "input": "Who is the HOD of Mathematics at CUI Attock?",
@@ -7085,31 +7084,31 @@
     "output": "Yes, his profile is listed under the Mathematics Department faculty page. : Agree.",
     "instruction": "You are an expert agent. Answer in English (or Urdu if asked in Urdu) with clarity."
   },
- {
-  "input": "who is the HOD of Electrical Engineering department?",
-  "output": " The hod of Electrical Engineering department is Mr. Yasir Muhammad",
-  "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
- },
- {
-  "input": "what is the Email address of the Mr.yasir Muhammad",
-  "output":"yasir.ee@ciit-attock.edu.pk",
-  "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
- },
- {
-  "input":"How we contact other than Email address?",
-  "output": "you can contact via Tel: 057-9316330-(275)",
-  "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
- },
- {
-  "input":"who is the HOD of computer Engineering Department?",
-  "output":"The Head of the Computer Engineering Department is Dr. Shujaat Ali Khan Tanoli.",
-  "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
- },
- {
-  "input":"what is the Email address of HOD of computer Engineering Department?",
-  "output":"shujat@cuiatk.edu.pk",
-  "instruction":"You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
- },
+  {
+    "input": "who is the HOD of Electrical Engineering department?",
+    "output": " The hod of Electrical Engineering department is Mr. Yasir Muhammad",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+  },
+  {
+    "input": "what is the Email address of the Mr.yasir Muhammad",
+    "output": "yasir.ee@ciit-attock.edu.pk",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+  },
+  {
+    "input": "How we contact other than Email address?",
+    "output": "you can contact via Tel: 057-9316330-(275)",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+  },
+  {
+    "input": "who is the HOD of computer Engineering Department?",
+    "output": "The Head of the Computer Engineering Department is Dr. Shujaat Ali Khan Tanoli.",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+  },
+  {
+    "input": "what is the Email address of HOD of computer Engineering Department?",
+    "output": "shujat@cuiatk.edu.pk",
+    "instruction": "You are an expert agent. Answer clearly and conversationally in English (or Urdu, if asked in Urdu)."
+  },
   {
     "input": "Who is the current HOD of CS at CUI Attock?",
     "output": "Dr. Zahoor-ur-Rehman Tanoli: Agree.",
@@ -7161,65 +7160,65 @@
     "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
   },
   {
-    "input":"who was the HOD of managment sciences befor dr.faisal shahzad",
-    "output":"Dr. Faisal Nawaz Mir",
-    "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
+    "input": "who was the HOD of managment sciences befor dr.faisal shahzad",
+    "output": "Dr. Faisal Nawaz Mir",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
   },
   {
     "input": "who is the current program incharge of SE program?",
     "output": " current program incharge of SE program is Dr.Muazzam Maqsood",
     "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who was the coordinator of SE program?",
-      "output":"previous program coordinator is waqas Ahmed",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who is the current program incharge of computer science program?",
-      "output": " current program incharge of computer science program is Dr.sardaraz ",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who was the coordinator of computer science program is ?",
-      "output":" coordinator of computer science program was syed usman Anwar",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who is the batch advisor of Fa22 SE program?",
-      "output":"current batch advisor of fa22 batch is Dr.shahzad faisal",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who was the batch advisor of fa22 batch before Dr.shahzad faisal?",
-      "output":"Mr.kashif jatoi was the batch advisor of fa22 batch",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who is the batch advisor of SE-8 semester? ",
-      "output":" batch advisor of SE-8 semester is waqas Ahmed",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who is the batch advisor of sp22 batch is?",
-      "output":"syed usman Anwar is the current batch advisor of sp22 semester",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who is the program incharge of Ms computer science?",
-      "output":"program incharge of MS program is Mr saleem khan",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who is the head of fyp projects?",
-      "output":" Dr.khalid Awan ",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
-    {
-      "input":"who is the program incharge of BBA program?",
-      "output":" program incharge of BBA program is usman kokab",
-      "instruction":"Answer in English or Urdu depending on the question. Keep it short and clear."
-    },
+  },
+  {
+    "input": "who was the coordinator of SE program?",
+    "output": "previous program coordinator is waqas Ahmed",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who is the current program incharge of computer science program?",
+    "output": " current program incharge of computer science program is Dr.sardaraz ",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who was the coordinator of computer science program is ?",
+    "output": " coordinator of computer science program was syed usman Anwar",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who is the batch advisor of Fa22 SE program?",
+    "output": "current batch advisor of fa22 batch is Dr.shahzad faisal",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who was the batch advisor of fa22 batch before Dr.shahzad faisal?",
+    "output": "Mr.kashif jatoi was the batch advisor of fa22 batch",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who is the batch advisor of SE-8 semester? ",
+    "output": " batch advisor of SE-8 semester is waqas Ahmed",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who is the batch advisor of sp22 batch is?",
+    "output": "syed usman Anwar is the current batch advisor of sp22 semester",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who is the program incharge of Ms computer science?",
+    "output": "program incharge of MS program is Mr saleem khan",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who is the head of fyp projects?",
+    "output": " Dr.khalid Awan ",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
+  {
+    "input": "who is the program incharge of BBA program?",
+    "output": " program incharge of BBA program is usman kokab",
+    "instruction": "Answer in English or Urdu depending on the question. Keep it short and clear."
+  },
   {
     "input": "Who is the current Director of COMSATS Attock Campus?",
     "output": "The current Director of COMSATS Attock Campus is Prof. Dr. Laiq Khan: Agree.",
@@ -7269,27 +7268,220 @@
     "input": "Is Dr. Junaid Mughal also a Professor of Electrical Engineering?",
     "output": "Yes, Prof. Dr. Muhammad Junaid Mughal is a Professor of Electrical Engineering at COMSATS University Islamabad: Agree.",
     "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "When was COMSATS Attock Campus established?",
+    "output": "COMSATS University Islamabad, Attock Campus was established in 2004 and has been offering undergraduate and graduate programs in Computer Sciences, Management Science, Electrical Engineering, and Mathematics ever since.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What is COMSATS University Islamabad Attock Campus?",
+    "output": "COMSATS University Islamabad (CUI) Attock Campus is a leading engineering and technology university established in 2004. It offers BS, MS, and PhD programs in Computer Science, Electrical Engineering, Computer Engineering, Management Sciences, and Mathematics. It is rapidly becoming a regional center of excellence in Attock.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Where is COMSATS Attock Campus located?",
+    "output": "COMSATS University Islamabad, Attock Campus is located near Officers Colony, University Road, Attock, Punjab, Pakistan. Phone: 057-9316330.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What programs are offered at COMSATS Attock?",
+    "output": "CUI Attock offers programs at three levels:\n• Undergraduate (BS): Computer Science, Software Engineering, Artificial Intelligence, Computer Engineering, Electrical Engineering, Business Administration, Mathematics, Mathematics with Data Science\n• Graduate (MS): Computer Science, Electrical Engineering, Computer Engineering, Business Administration, Mathematics\n• Doctoral (PhD): Computer Science, Electrical Engineering, Computer Engineering, Management Science, Mathematics",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "CUI Attock campus kab shuru hua?",
+    "output": "COMSATS University Islamabad, Attock Campus 2004 mein qaaim hua tha aur tab se Computer Sciences, Management Science, Electrical Engineering, aur Mathematics mein undergraduate aur graduate programs pesh kar raha hai.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What is the contact number of COMSATS Attock Campus?",
+    "output": "You can reach COMSATS Attock Campus at:\n📞 057-9316330 / 057-9316331 / 057-9049158\n📧 Admissions: [email protected]\n📱 WhatsApp: +92-3155504184\n🕐 Office Hours: Mon–Fri, 8:30 AM – 4:30 PM",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What is the admissions email for COMSATS Attock?",
+    "output": "For admissions queries, email [email protected] or visit admissions.comsats.edu.pk. You can also call 057-9049158 or WhatsApp +92-3155504184.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What are the office hours at COMSATS Attock?",
+    "output": "The administrative offices at COMSATS Attock Campus are open Monday to Friday, 8:30 AM to 4:30 PM.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "COMSATS Attock ka phone number kya hai?",
+    "output": "COMSATS Attock Campus se raabta karne ke liye:\n📞 057-9316330 / 057-9316331 / 057-9049158\n📧 [email protected]\n📱 WhatsApp: +92-3155504184\n🕐 Daftar ke awqaat: Peer ta Juma, 8:30 AM – 4:30 PM",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What is the fee structure at COMSATS Attock?",
+    "output": "The fee at CUI Attock consists of a Registration Fee and Tuition Fee per semester, applicable for Spring 2026 / Fall 2025 sessions. Exact amounts vary by program level (Undergraduate, Graduate, Doctoral). For the current fee breakdown, visit: https://cuiatk.edu.pk/new/fee-structure/",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "How much are the fees for BS programs at COMSATS Attock?",
+    "output": "BS program fees at CUI Attock include a per-semester Registration Fee and Tuition Fee. The exact amounts for Computer Science, Electrical Engineering, Computer Engineering, Business Administration, and Mathematics programs are listed at: https://cuiatk.edu.pk/new/fee-structure/",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "COMSATS Attock fees kitni hain?",
+    "output": "CUI Attock mein BS, MS, aur PhD programs ke liye per-semester Registration Fee aur Tuition Fee lagti hai. Tajza fee structure ke liye yahan dekhen: https://cuiatk.edu.pk/new/fee-structure/",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What BS degrees does COMSATS Attock offer?",
+    "output": "COMSATS Attock offers the following BS (undergraduate) programs:\n• BS Computer Science\n• BS Software Engineering\n• BS Artificial Intelligence\n• BS Computer Engineering\n• BS Electrical Engineering\n• BS Business Administration\n• BS Mathematics\n• BS Mathematics with Data Science",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Does COMSATS Attock offer BS Artificial Intelligence?",
+    "output": "Yes! COMSATS Attock Campus offers a BS in Artificial Intelligence through the Department of Computer Science. It's one of the newer programs available at the campus.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Does COMSATS Attock offer BS Software Engineering?",
+    "output": "Yes, COMSATS Attock Campus offers a BS in Software Engineering under the Department of Computer Science.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Does COMSATS Attock offer BS Mathematics with Data Science?",
+    "output": "Yes, CUI Attock offers a BS in Mathematics with Data Science through the Department of Mathematics, combining mathematical foundations with modern data science skills.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What MS programs are offered at COMSATS Attock?",
+    "output": "COMSATS Attock Campus offers the following MS (graduate) programs:\n• MS Computer Science\n• MS Computer Engineering\n• MS Electrical Engineering\n• MS Business Administration (MBA)\n• MS Mathematics",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "COMSATS Attock mein MS programs kaunse hain?",
+    "output": "CUI Attock mein MS level par yeh programs maujood hain:\n• MS Computer Science\n• MS Computer Engineering\n• MS Electrical Engineering\n• MS Business Administration\n• MS Mathematics",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What PhD programs are available at COMSATS Attock?",
+    "output": "COMSATS Attock Campus offers PhD programs in:\n• Computer Science\n• Computer Engineering\n• Electrical Engineering\n• Management Science\n• Mathematics",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Does COMSATS Attock offer PhD programs?",
+    "output": "Yes, CUI Attock offers PhD (doctoral) programs in Computer Science, Computer Engineering, Electrical Engineering, Management Science, and Mathematics.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What are the departments at COMSATS Attock?",
+    "output": "COMSATS Attock Campus has 5 departments:\n1. Department of Computer Science\n2. Department of Electrical Engineering\n3. Department of Computer Engineering\n4. Department of Management Sciences\n5. Department of Mathematics",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What is the mission of BS Computer Science at COMSATS Attock?",
+    "output": "The mission of the BS CS program at CUI Attock is to provide high-quality education in computer science that prepares students for professional careers and lifelong learning in developing and managing computational processes and systems, with emphasis on systems automation, information management, IT infrastructure management, and intelligent systems.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What will I learn in BS CS at COMSATS Attock?",
+    "output": "In the BS Computer Science program at CUI Attock, you will:\n• Gain a sound understanding of core computer science areas\n• Learn to apply computing skills to solve real-world problems\n• Work on systems automation, information management, and IT infrastructure\n• Develop skills in intelligent systems and AI\n• Prepare for professional careers or further graduate studies",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "When did BS Electrical Engineering start at COMSATS Attock?",
+    "output": "The Bachelor of Science in Electrical Engineering (BSEE) program at COMSATS Attock Campus started in Fall 2007.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What are the specializations in BS Electrical Engineering at COMSATS Attock?",
+    "output": "The BS Electrical Engineering program at CUI Attock offers specializations in:\n• Power Engineering\n• Telecommunications\n• Electronics\n• Computer Engineering\n• Control Systems",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What is the PhD Computer Science program about at COMSATS Attock?",
+    "output": "The PhD Computer Science program at CUI Attock aims to produce well-trained scientists and researchers for both academia and industry. The curriculum covers theoretical foundations combined with the latest technologies. Students work in specialized research groups supervised by highly qualified faculty.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What scholarships are available at COMSATS Attock?",
+    "output": "COMSATS Attock Campus offers various scholarships and financial aid:\n• Merit-based scholarships for top-performing students\n• Need-based financial aid for deserving students\n• PEEF (Punjab Educational Endowment Fund) scholarships\n• COMSATS internal scholarships\n• Laptop distribution schemes\nVisit https://cuiatk.edu.pk/new/scholarships/ for full details.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "How can I get a scholarship at COMSATS Attock?",
+    "output": "To get a scholarship at CUI Attock, you should:\n1. Maintain a high GPA for merit-based awards\n2. Apply for need-based financial aid through the student affairs office\n3. Apply for PEEF scholarships if you meet provincial criteria\n4. Check the official scholarships page for open applications: https://cuiatk.edu.pk/new/scholarships/",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "COMSATS Attock mein scholarship kaise milti hai?",
+    "output": "CUI Attock mein scholarship hasil karne ke liye:\n1. Merit scholarship ke liye acha GPA maintain karein\n2. Need-based aid ke liye Student Affairs office se rabta karein\n3. PEEF scholarship ke liye punjab government ke criteria check karein\n4. Tajza maloomat ke liye: https://cuiatk.edu.pk/new/scholarships/",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What facilities does the library at COMSATS Attock offer?",
+    "output": "The Library at CUI Attock is spacious and well-planned, offering:\n• A wide collection of academic books, periodicals, and journals\n• A calm and peaceful study environment\n• Digital resources and online journal access\n• Reference and research support\n• It is developing into one of the best information resource centers in Attock.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Does COMSATS Attock have a good library?",
+    "output": "Yes! The library at CUI Attock is spacious and well-designed for academic work. It provides access to a wide range of books, journals, and digital resources, making it one of the richest information centers in the Attock region.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What is the campus life like at COMSATS Attock?",
+    "output": "Campus life at CUI Attock is vibrant and well-rounded:\n• Student Affairs supports wellbeing, leadership development, and campus activities\n• Athletics program with competitive sports and physical fitness\n• Student societies and clubs\n• Annual events and activities\n• A diverse and welcoming community",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Does COMSATS Attock have sports facilities?",
+    "output": "Yes, COMSATS Attock Campus has an athletics program that encourages competitive sports, teamwork, and physical excellence. The student affairs office also organizes various extracurricular activities throughout the academic year.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "How do I apply to COMSATS Attock Campus?",
+    "output": "To apply to CUI Attock:\n1. Visit the official website: cuiatk.edu.pk\n2. Check eligibility criteria for your program (BS, MS, or PhD)\n3. Apply online at: admissions.comsats.edu.pk\n4. Pay the application fee\n5. Appear for the entry test if required\n6. Check your result and confirm admission\n\nFor help: 📞 057-9049158 | 📱 WhatsApp: +92-3155504184",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What are the BS admission requirements at COMSATS Attock?",
+    "output": "For BS admissions at CUI Attock:\n• Intermediate (FSc Pre-Engineering/ICS) or equivalent with at least 50% marks\n• Valid NTS/SAT score or COMSATS own entry test\n• Apply through: admissions.comsats.edu.pk\nFor full details: https://cuiatk.edu.pk/new/undergraduate/",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What are the MS admission requirements at COMSATS Attock?",
+    "output": "For MS admissions at CUI Attock:\n• 4-year BS/BE degree (16 years of education) with minimum 2.0 CGPA\n• Valid NTS-GAT score or COMSATS internal test\n• Apply online at admissions.comsats.edu.pk\nFor details: https://cuiatk.edu.pk/new/graduate/",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "COMSATS Attock mein admission kaise hota hai?",
+    "output": "CUI Attock mein admission ke liye:\n1. cuiatk.edu.pk visit karein\n2. Apne program (BS, MS, PhD) ke eligibility criteria check karein\n3. admissions.comsats.edu.pk par online apply karein\n4. Application fee ada karein\n5. Entry test dein\n6. Result check karein aur admission confirm karein\n📞 057-9049158 | 📱 WhatsApp: +92-3155504184",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "What is CU-Online at COMSATS Attock?",
+    "output": "CU-Online (also known as the FLEX portal) is the official student portal at COMSATS University. Students use it to:\n• Register for courses\n• Check grades and exam results\n• View academic records and transcripts\n• Access course materials\n• View timetables and announcements",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "How do I check my grades at COMSATS Attock?",
+    "output": "You can check your grades and academic results through the CU-Online (FLEX) student portal. Log in with your student credentials at the COMSATS online portal to access your results, course registrations, and academic history.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "How does the exam system work at COMSATS Attock?",
+    "output": "COMSATS Attock follows a semester-based examination system:\n• Mid-term exams held mid-semester\n• Final exams at the end of each semester\n• Results are posted through the CU-Online (FLEX) portal\n• The Examinations Office manages scheduling, invigilation, and results\nFor queries, contact the Examinations Office on campus.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Is COMSATS Attock a government university?",
+    "output": "Yes, COMSATS University Islamabad (CUI) is a public university established by the Government of Pakistan. The Attock Campus is one of its regional campuses offering fully accredited degree programs.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "Is CUI Attock HEC recognized?",
+    "output": "Yes, COMSATS University Islamabad and all its campuses including Attock are recognized by the Higher Education Commission (HEC) of Pakistan. All degrees are HEC-recognized and valid for employment and further studies.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "COMSATS Attock HEC se recognized hai?",
+    "output": "Ji haan, COMSATS University Islamabad aur uska Attock Campus Higher Education Commission (HEC) Pakistan se manzoor shuda hai. Yahan se hasil ki gayi degrees HEC-recognized hain aur mulazmat aur aage ki taaleem ke liye qabil-e-qabool hain.",
+    "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
   }
 ]
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-  
-
-  
-
-  
-
