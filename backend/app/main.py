@@ -6,8 +6,9 @@ import io
 import json
 import os
 import re
+from collections import OrderedDict
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,7 +20,6 @@ from pydantic import BaseModel
 # Text normalisation helpers
 # ---------------------------------------------------------------------------
 
-# Question words to strip so "what is the fee" ≈ "fee"
 _QW_EN = re.compile(
     r"\b(what|whats|what's|who|when|where|how|which|why|is|are|was|were|"
     r"do|does|did|can|could|will|would|should|has|have|had|the|a|an|of|"
@@ -32,7 +32,6 @@ _QW_EN = re.compile(
     re.IGNORECASE,
 )
 
-# Urdu question / stop words to strip
 _QW_UR = re.compile(
     r"(کیا|کب|کہاں|کیسے|کون|کتنا|کتنی|کتنے|کے|کا|کی|ہے|ہیں|میں|کو|"
     r"سے|پر|اور|یا|لیے|یہ|وہ|نہیں|بھی|تو|ہی|جو|جس|جن|"
@@ -40,7 +39,6 @@ _QW_UR = re.compile(
     re.UNICODE,
 )
 
-# Common synonym / variant mapping  (key → canonical term fed to the index)
 _SYNONYMS: dict[str, str] = {
     "fees": "fee",
     "tuition": "fee",
@@ -128,20 +126,14 @@ _SYNONYMS: dict[str, str] = {
 
 
 def _normalize(text: str) -> str:
-    """Lowercase, strip question words, expand synonyms, clean punctuation."""
     t = text.lower().strip()
-    # Remove punctuation except Urdu letters
     t = re.sub(r"[^\w\s\u0600-\u06FF]", " ", t)
-    # Strip English question/stop words
     t = _QW_EN.sub(" ", t)
-    # Strip Urdu question/stop words
     t = _QW_UR.sub(" ", t)
-    # Apply synonym map (word-level)
     words = t.split()
     mapped = []
     i = 0
     while i < len(words):
-        # Try 2-word phrases first
         if i + 1 < len(words):
             bigram = words[i] + " " + words[i + 1]
             if bigram in _SYNONYMS:
@@ -152,7 +144,6 @@ def _normalize(text: str) -> str:
         mapped.append(_SYNONYMS.get(word, word))
         i += 1
     t = " ".join(mapped)
-    # Collapse whitespace
     t = re.sub(r"\s+", " ", t).strip()
     return t
 
@@ -174,11 +165,7 @@ def _is_greeting(text: str) -> bool:
 
 
 class DatasetKnowledgeBase:
-    """Triple-scored knowledge base: BM25 + word TF-IDF + char TF-IDF.
-
-    Scoring weights: BM25 (35%) + word TF-IDF (45%) + char TF-IDF (20%).
-    Queries are normalised before matching to improve recall.
-    """
+    """Triple-scored knowledge base: BM25 (35%) + word TF-IDF (45%) + char TF-IDF (20%)."""
 
     def __init__(self, dataset_path: str):
         self.qa_pairs: list[dict] = []
@@ -213,18 +200,15 @@ class DatasetKnowledgeBase:
             from sklearn.feature_extraction.text import TfidfVectorizer
             from rank_bm25 import BM25Okapi
 
-            # BM25 on normalised tokenised questions
             tokenized = [q.split() for q in self.norm_questions]
             self._bm25 = BM25Okapi(tokenized)
 
-            # Char n-gram TF-IDF (surface similarity)
             self._char_vec = TfidfVectorizer(
                 analyzer="char_wb", ngram_range=(2, 4),
                 max_features=10000, sublinear_tf=True,
             )
             self._char_mat = self._char_vec.fit_transform(self.norm_questions)
 
-            # Word n-gram TF-IDF (semantic/topical similarity)
             self._word_vec = TfidfVectorizer(
                 analyzer="word", ngram_range=(1, 3),
                 max_features=10000, sublinear_tf=True,
@@ -236,30 +220,25 @@ class DatasetKnowledgeBase:
             print(f"[EduBot] WARNING: Index build failed ({e}).")
 
     def _scores(self, query: str):
-        """Return blended similarity scores for all Q&A pairs."""
         import numpy as np
         from sklearn.metrics.pairwise import cosine_similarity
 
         norm_q = _normalize(query)
         tokens = norm_q.split() if norm_q.strip() else query.lower().split()
 
-        # BM25 — normalise to [0,1]
         bm25_raw = np.array(self._bm25.get_scores(tokens), dtype=float)
         bm25_max = bm25_raw.max()
         bm25 = bm25_raw / bm25_max if bm25_max > 0 else bm25_raw
 
-        # Char TF-IDF cosine
         char_q = self._char_vec.transform([norm_q])
         char = cosine_similarity(char_q, self._char_mat).flatten()
 
-        # Word TF-IDF cosine
         word_q = self._word_vec.transform([norm_q])
         word = cosine_similarity(word_q, self._word_mat).flatten()
 
         return 0.35 * bm25 + 0.45 * word + 0.20 * char
 
     def find_similar(self, query: str, top_k: int = 5, min_score: float = 0.15) -> list[dict]:
-        """Return top_k Q&A pairs above min_score threshold."""
         if not self._ready or not query.strip():
             return []
         try:
@@ -280,7 +259,6 @@ class DatasetKnowledgeBase:
             return []
 
     def best_answer(self, query: str, min_score: float = 0.45) -> Optional[str]:
-        """Return direct dataset answer only when confidence is high."""
         results = self.find_similar(query, top_k=1, min_score=min_score)
         if results:
             return results[0]["output"]
@@ -289,6 +267,29 @@ class DatasetKnowledgeBase:
 
 _dataset_path = os.path.join(os.path.dirname(__file__), "dataset.json")
 kb = DatasetKnowledgeBase(_dataset_path)
+
+
+# ---------------------------------------------------------------------------
+# Response cache  (LRU, max 120 entries, keyed by normalised question)
+# ---------------------------------------------------------------------------
+
+_CACHE_MAX = 120
+_response_cache: OrderedDict[str, tuple[str, str]] = OrderedDict()
+
+
+def _cache_get(key: str) -> Optional[tuple[str, str]]:
+    if key in _response_cache:
+        _response_cache.move_to_end(key)
+        return _response_cache[key]
+    return None
+
+
+def _cache_put(key: str, value: tuple[str, str]) -> None:
+    if key in _response_cache:
+        _response_cache.move_to_end(key)
+    _response_cache[key] = value
+    if len(_response_cache) > _CACHE_MAX:
+        _response_cache.popitem(last=False)
 
 
 # ---------------------------------------------------------------------------
@@ -305,6 +306,7 @@ STRICT RULES:
 3. FORMAT: Keep answers concise and student-friendly. Use bullet points for lists. Maximum 5 sentences.
 4. SCOPE: Only answer questions about COMSATS Attock Campus. Politely decline unrelated questions.
 5. FALLBACK: If the Knowledge Base has no answer, say so and direct to: 057-9316330 or [email protected]
+6. CONTEXT: The conversation history below shows previous turns. Use it to understand follow-up questions.
 
 You help with:
 - Admissions, eligibility, how to apply
@@ -322,7 +324,7 @@ DATASET_CONTEXT_TEMPLATE = """
 {qa_pairs}
 === END KNOWLEDGE BASE ===
 
-Instructions: The KNOWLEDGE BASE above contains verified Q&A pairs. Use the most relevant pair(s) to construct your answer. Expand naturally but DO NOT contradict or add information not present in the knowledge base.
+Instructions: Use the most relevant Q&A pair(s) above to construct your answer. Expand naturally but DO NOT contradict or add information not in the knowledge base.
 """
 
 GEMINI_AVAILABLE = False
@@ -345,7 +347,7 @@ except Exception as e:
 
 
 # ---------------------------------------------------------------------------
-# TTS helper
+# TTS helper  (server-side fallback — frontend prefers Web Speech API)
 # ---------------------------------------------------------------------------
 
 def _detect_language(text: str) -> str:
@@ -362,6 +364,10 @@ def _synthesize_audio(text: str, language: Optional[str] = "en") -> Optional[str
     lang = language or "en"
     if lang not in {"en", "ur"}:
         lang = "en"
+    # Trim very long answers to keep TTS fast
+    words = text.split()
+    if len(words) > 80:
+        text = " ".join(words[:80]) + "…"
     buffer = io.BytesIO()
     try:
         from gtts import gTTS
@@ -377,11 +383,9 @@ def _synthesize_audio(text: str, language: Optional[str] = "en") -> Optional[str
 # ---------------------------------------------------------------------------
 
 def _build_system_prompt(question: str) -> str:
-    """Build system prompt enriched with top relevant dataset context."""
     if _is_greeting(question):
         return SYSTEM_PROMPT_TEMPLATE.format(dataset_context="")
 
-    # Fetch top 6 most relevant pairs (BM25 + TF-IDF blended)
     similar = kb.find_similar(question, top_k=6, min_score=0.12)
     if similar:
         qa_text = "\n\n".join(
@@ -394,16 +398,29 @@ def _build_system_prompt(question: str) -> str:
     return SYSTEM_PROMPT_TEMPLATE.format(dataset_context=context)
 
 
-def _call_gemini(question: str, model_name: str) -> str:
+def _call_gemini(question: str, model_name: str, history: list[dict]) -> str:
     from google.genai import types as _types
+
     system_prompt = _build_system_prompt(question)
+
+    # Build multi-turn contents list
+    contents: list = []
+    for turn in history[-6:]:  # Keep last 3 exchanges (6 turns)
+        role = "user" if turn.get("role") == "user" else "model"
+        contents.append(
+            _types.Content(role=role, parts=[_types.Part(text=turn.get("content", ""))])
+        )
+    contents.append(
+        _types.Content(role="user", parts=[_types.Part(text=question)])
+    )
+
     response = gemini_client.models.generate_content(
         model=model_name,
-        contents=question,
+        contents=contents,
         config=_types.GenerateContentConfig(
             system_instruction=system_prompt,
-            temperature=0.4,        # lower = more factual, less hallucination
-            max_output_tokens=700,
+            temperature=0.35,
+            max_output_tokens=600,
         ),
     )
     text = response.text.strip() if response.text else ""
@@ -411,10 +428,8 @@ def _call_gemini(question: str, model_name: str) -> str:
 
 
 def _dataset_answer(question: str) -> str:
-    """Smart dataset fallback with confidence-based answer selection."""
     lang = _detect_language(question)
 
-    # ── Greetings ────────────────────────────────────────────────────────────
     if _is_greeting(question):
         if lang == "ur":
             return "السلام علیکم! میں EduBot ہوں — COMSATS اٹک کیمپس کا آفیشل معاون۔ آپ کا کیا سوال ہے؟"
@@ -432,33 +447,27 @@ def _dataset_answer(question: str) -> str:
     best = similar[0]
     second = similar[1] if len(similar) > 1 else None
 
-    # ── Very high confidence → direct answer ─────────────────────────────────
     if best["score"] >= 0.50:
         return best["output"]
 
-    # ── High confidence, clear winner ────────────────────────────────────────
     if best["score"] >= 0.35:
         if second is None or best["score"] > second["score"] * 1.25:
             return best["output"]
-        # Two strong matches → combine
         if lang == "ur":
             intro = "آپ کے سوال سے متعلق یہ معلومات ملی ہیں:"
         else:
             intro = "Here's what I found related to your question:"
         return intro + "\n\n" + "\n\n".join(f"• {r['output']}" for r in similar[:2])
 
-    # ── Medium confidence (0.20–0.35) — use best if it clearly leads ─────────
     if best["score"] >= 0.20:
         if second is None or best["score"] > second["score"] * 1.30:
             return best["output"]
-        # Ambiguous — offer top result with a caveat
         if lang == "ur":
             caveat = "شاید آپ یہ جاننا چاہتے ہیں:\n\n"
         else:
             caveat = "You might be asking about:\n\n"
         return caveat + best["output"]
 
-    # ── Low confidence fallback ───────────────────────────────────────────────
     if lang == "ur":
         return ("معذرت، مجھے یقینی جواب نہیں مل سکا۔ "
                 "براہ کرم 057-9316330 پر کال کریں یا [email protected] پر ای میل کریں۔")
@@ -466,8 +475,23 @@ def _dataset_answer(question: str) -> str:
             "Please contact COMSATS Attock Campus at 057-9316330 or email [email protected].")
 
 
-def _generate_response(question: str) -> tuple[str, str, Optional[str]]:
-    """Try Gemini first (with enriched dataset context), fall back to dataset search."""
+def _generate_response(
+    question: str,
+    history: list[dict],
+    want_audio: bool,
+) -> tuple[str, str, Optional[str]]:
+    """Try Gemini first; fall back to dataset. Cache answers by normalised question."""
+    cache_key = _normalize(question)
+
+    # Cache hit (only for stateless queries — skip if there's active history)
+    if not history:
+        cached = _cache_get(cache_key)
+        if cached:
+            answer, language = cached
+            audio = _synthesize_audio(answer, language) if want_audio else None
+            print(f"[EduBot] Cache hit for: {question[:60]}")
+            return answer, language, audio
+
     transient_codes = [
         "429", "503", "RESOURCE_EXHAUSTED", "UNAVAILABLE",
         "quota", "rate", "overload", "capacity",
@@ -477,11 +501,13 @@ def _generate_response(question: str) -> tuple[str, str, Optional[str]]:
         models_to_try = ["gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash"]
         for model_name in models_to_try:
             try:
-                answer = _call_gemini(question, model_name)
+                answer = _call_gemini(question, model_name, history)
                 language = _detect_language(answer)
-                audio_base64 = _synthesize_audio(answer, language)
+                if not history:
+                    _cache_put(cache_key, (answer, language))
+                audio = _synthesize_audio(answer, language) if want_audio else None
                 print(f"[EduBot] Answered via Gemini ({model_name})")
-                return answer, language, audio_base64
+                return answer, language, audio
             except Exception as e:
                 error_str = str(e)
                 if any(code in error_str for code in transient_codes):
@@ -493,16 +519,18 @@ def _generate_response(question: str) -> tuple[str, str, Optional[str]]:
 
     answer = _dataset_answer(question)
     language = _detect_language(answer)
-    audio_base64 = _synthesize_audio(answer, language)
+    if not history:
+        _cache_put(cache_key, (answer, language))
+    audio = _synthesize_audio(answer, language) if want_audio else None
     print("[EduBot] Answered via dataset fallback.")
-    return answer, language, audio_base64
+    return answer, language, audio
 
 
 # ---------------------------------------------------------------------------
 # FastAPI application
 # ---------------------------------------------------------------------------
 
-app = FastAPI(title="EduBot Backend", version="4.0.0")
+app = FastAPI(title="EduBot Backend", version="5.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -530,8 +558,15 @@ class NoCacheMiddleware(BaseHTTPMiddleware):
 app.add_middleware(NoCacheMiddleware)
 
 
+class HistoryTurn(BaseModel):
+    role: str      # "user" or "bot"
+    content: str
+
+
 class ChatRequest(BaseModel):
     question: str
+    history: List[HistoryTurn] = []
+    want_audio: bool = False   # Frontend uses Web Speech API by default
 
 
 class ChatResponse(BaseModel):
@@ -548,6 +583,7 @@ async def health_check() -> dict:
         "gemini_available": GEMINI_AVAILABLE,
         "dataset_loaded": kb._ready,
         "dataset_size": len(kb.qa_pairs),
+        "cache_size": len(_response_cache),
     }
 
 
@@ -562,16 +598,21 @@ async def chat(request: ChatRequest) -> ChatResponse:
     if not question:
         raise HTTPException(status_code=400, detail="Question must not be empty.")
 
+    history = [{"role": t.role, "content": t.content} for t in request.history]
+    want_audio = request.want_audio
+
     loop = asyncio.get_event_loop()
     try:
         answer, language, audio_base64 = await asyncio.wait_for(
-            loop.run_in_executor(None, _generate_response, question),
+            loop.run_in_executor(
+                None, _generate_response, question, history, want_audio
+            ),
             timeout=25.0,
         )
     except asyncio.TimeoutError:
         answer = _dataset_answer(question)
         language = _detect_language(answer)
-        audio_base64 = _synthesize_audio(answer, language)
+        audio_base64 = _synthesize_audio(answer, language) if want_audio else None
 
     return ChatResponse(answer=answer, language=language, audio_base64=audio_base64)
 
