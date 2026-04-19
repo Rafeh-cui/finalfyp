@@ -5,18 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduBot - Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-
   <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #000; /* Solid Black Background */
+    body { font-family: 'Roboto', sans-serif; background-color: #000; }
+    h1,h2,h3,h4,h5,h6,nav,button { font-family: 'Poppins', sans-serif; }
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.2); border-top-color: #1d4ed8;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
     }
-    h1, h2, h3, h4, h5, h6, nav, button {
-      font-family: 'Poppins', sans-serif;
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 
@@ -26,21 +24,11 @@
   <header class="bg-gradient-to-r from-blue-900/80 via-black/80 to-blue-900/80 shadow-lg rounded-3xl mt-6 mx-4 sm:mx-8 lg:mx-20">
     <div class="container mx-auto flex flex-col items-center px-4 py-4">
       <div class="flex flex-col items-center">
-        
-        <!-- Logo with white border -->
         <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white border-4 border-white overflow-hidden shadow-lg">
-          <img src="images__3_-removebg-preview.png" alt="COMSATS Logo" class="w-full h-full object-cover" />
+          <img src="images__3_-removebg-preview.png" alt="EduBot Logo" class="w-full h-full object-cover" />
         </div>
-
-        <h1 class="text-center text-base sm:text-lg md:text-2xl font-bold text-white tracking-wide mt-3">
-          EduBot
-        </h1>
-
-        <!-- Mini subtitle in brackets -->
-        <p class="text-center text-xs sm:text-sm text-gray-300 mt-1">
-          (Your Smart Campus Assistant)
-        </p>
-
+        <h1 class="text-center text-base sm:text-lg md:text-2xl font-bold text-white tracking-wide mt-3">EduBot</h1>
+        <p class="text-center text-xs sm:text-sm text-gray-300 mt-1">(Your Smart Campus Assistant)</p>
       </div>
     </div>
   </header>
@@ -48,17 +36,20 @@
   <!-- MAIN LOGIN CARD -->
   <main class="flex-grow flex items-center justify-center p-6">
     <div class="w-full max-w-md bg-gradient-to-br from-blue-900/50 to-blue-800/50 text-white p-10 rounded-3xl shadow-lg border border-blue-900/40">
-      
+
       <h2 class="text-2xl font-bold text-center">Login</h2>
       <p class="text-center text-gray-300 mb-6">Enter your credentials to continue</p>
 
+      <!-- Inline message banner (success / error) -->
+      <div id="msgBanner" class="hidden mb-4 rounded-xl px-4 py-3 text-sm text-center font-medium"></div>
+
       <form id="loginForm" class="space-y-4">
-        
+
         <!-- Email -->
         <div>
           <label for="email" class="block text-sm font-medium text-gray-200">Email Address</label>
           <input id="email" type="email" placeholder="Enter your email" required
-                 class="mt-1 w-full px-4 py-3 rounded-xl bg-white/90 text-gray-900 placeholder-gray-500 
+                 class="mt-1 w-full px-4 py-3 rounded-xl bg-white/90 text-gray-900 placeholder-gray-500
                         focus:ring-2 focus:ring-blue-500 outline-none shadow-md">
         </div>
 
@@ -66,7 +57,7 @@
         <div>
           <label for="password" class="block text-sm font-medium text-gray-200">Password</label>
           <input id="password" type="password" placeholder="Enter your password" required
-                 class="mt-1 w-full px-4 py-3 rounded-xl bg-white/90 text-gray-900 placeholder-gray-500 
+                 class="mt-1 w-full px-4 py-3 rounded-xl bg-white/90 text-gray-900 placeholder-gray-500
                         focus:ring-2 focus:ring-blue-500 outline-none shadow-md">
         </div>
 
@@ -76,30 +67,35 @@
         </div>
 
         <!-- Login Button -->
-        <button type="submit"
-          class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition">
-          Login
+        <button type="submit" id="loginBtn"
+          class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+          <span id="loginBtnText">Login</span>
         </button>
       </form>
 
       <!-- OR Divider -->
-      <div class="flex items-center my-4">
-        <div class="flex-grow border-t border-gray-500"></div>
-        <span class="mx-2 text-gray-400">OR</span>
-        <div class="flex-grow border-t border-gray-500"></div>
+      <div class="flex items-center my-5">
+        <div class="flex-grow border-t border-gray-600"></div>
+        <span class="mx-3 text-gray-400 text-sm">OR</span>
+        <div class="flex-grow border-t border-gray-600"></div>
       </div>
 
-      <!-- Google Login Button -->
-      <div class="mt-2 flex justify-center">
-        <button onclick="handleGoogleLogin()" 
-          class="bg-white text-black px-6 py-3 rounded-xl shadow-lg hover:bg-gray-200 transition">
-          Continue with Google
-        </button>
-      </div>
+      <!-- Google Sign-In Button -->
+      <button id="googleBtn" onclick="handleGoogleLogin()"
+        class="w-full flex items-center justify-center gap-3 bg-white text-gray-800 font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-gray-100 active:scale-95 transition-all">
+        <!-- Google coloured "G" logo -->
+        <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        <span id="googleBtnText">Continue with Google</span>
+      </button>
 
       <!-- Register Link -->
       <p class="mt-6 text-center text-gray-300 text-sm">
-        Don’t have an account?
+        Don't have an account?
         <a href="register.html" class="text-blue-400 hover:underline">Create one</a>
       </p>
     </div>
@@ -110,48 +106,135 @@
     For further queries contact <span class="font-medium text-white">edubotofficial@gmail.com</span>
   </footer>
 
-  <!-- Firebase Login JS -->
   <script type="module">
     import { auth } from "./firebase.js";
-    import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } 
-    from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+    import {
+      signInWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithRedirect,
+      getRedirectResult
+    } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-    const loginForm = document.getElementById("loginForm");
+    // ── UI helpers ────────────────────────────────────────────────────────────
+    const msgBanner  = document.getElementById("msgBanner");
+    const loginBtn   = document.getElementById("loginBtn");
+    const loginBtnText = document.getElementById("loginBtnText");
+    const googleBtn  = document.getElementById("googleBtn");
+    const googleBtnText = document.getElementById("googleBtnText");
 
-    loginForm.addEventListener("submit", async (e) => {
+    function showMsg(text, type = "error") {
+      msgBanner.className = "mb-4 rounded-xl px-4 py-3 text-sm text-center font-medium " +
+        (type === "success"
+          ? "bg-green-800/60 border border-green-600/50 text-green-200"
+          : "bg-red-900/50 border border-red-700/50 text-red-300");
+      msgBanner.textContent = text;
+      msgBanner.classList.remove("hidden");
+    }
+
+    function setLoading(btn, textEl, loading, label) {
+      btn.disabled = loading;
+      textEl.textContent = label;
+      // spinner
+      const old = btn.querySelector(".spinner");
+      if (old) old.remove();
+      if (loading) {
+        const s = document.createElement("span");
+        s.className = "spinner";
+        btn.prepend(s);
+      }
+    }
+
+    function friendlyError(code) {
+      const map = {
+        "auth/user-not-found":       "No account found with this email.",
+        "auth/wrong-password":       "Incorrect password. Please try again.",
+        "auth/invalid-email":        "Please enter a valid email address.",
+        "auth/too-many-requests":    "Too many attempts. Please wait a moment and try again.",
+        "auth/network-request-failed": "Network error. Please check your connection.",
+        "auth/unauthorized-domain":  "This domain is not authorised in Firebase. Please open the app via its published URL.",
+        "auth/popup-blocked":        "Pop-up was blocked by your browser. Trying redirect instead…",
+        "auth/popup-closed-by-user": "Sign-in window was closed. Please try again.",
+        "auth/cancelled-popup-request": null,
+      };
+      return map[code] || null;
+    }
+
+    // ── Check for redirect result on page load ────────────────────────────────
+    (async () => {
+      try {
+        showMsg("Checking sign-in status…", "success");
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          const user = result.user;
+          localStorage.setItem("savedEmail", user.email);
+          localStorage.setItem("savedName", user.displayName || "");
+          localStorage.setItem("rememberMe", "true");
+          sessionStorage.setItem("fromLogin", "true");
+          showMsg("✅ Signed in! Redirecting…", "success");
+          setTimeout(() => { window.location.href = "welcomescreen.html"; }, 600);
+        } else {
+          msgBanner.classList.add("hidden");
+        }
+      } catch (err) {
+        msgBanner.classList.add("hidden");
+        const msg = friendlyError(err.code);
+        if (msg) showMsg(msg);
+      }
+    })();
+
+    // ── Email / password login ────────────────────────────────────────────────
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const email = document.getElementById("email").value.trim();
+      msgBanner.classList.add("hidden");
+      const email    = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
 
+      setLoading(loginBtn, loginBtnText, true, "Logging in…");
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
+        const { user } = await signInWithEmailAndPassword(auth, email, password);
         localStorage.setItem("savedEmail", user.email);
         localStorage.setItem("rememberMe", "true");
         sessionStorage.setItem("fromLogin", "true");
-
-        window.location.href = "welcomescreen.html";
-      } catch (error) {
-        alert("Login Failed: " + error.message);
+        showMsg("✅ Login successful! Redirecting…", "success");
+        setTimeout(() => { window.location.href = "welcomescreen.html"; }, 600);
+      } catch (err) {
+        showMsg(friendlyError(err.code) || err.message);
+        setLoading(loginBtn, loginBtnText, false, "Login");
       }
     });
 
+    // ── Google sign-in ────────────────────────────────────────────────────────
     const googleProvider = new GoogleAuthProvider();
-    window.handleGoogleLogin = async function () {
-      try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const user = result.user;
+    googleProvider.setCustomParameters({ prompt: "select_account" });
 
+    window.handleGoogleLogin = async function () {
+      msgBanner.classList.add("hidden");
+      setLoading(googleBtn, googleBtnText, true, "Connecting…");
+
+      try {
+        // Prefer popup; works on most browsers outside iframes
+        const result = await signInWithPopup(auth, googleProvider);
+        const user   = result.user;
         localStorage.setItem("savedEmail", user.email);
-        localStorage.setItem("savedName", user.displayName);
+        localStorage.setItem("savedName",  user.displayName || "");
         localStorage.setItem("rememberMe", "true");
         sessionStorage.setItem("fromLogin", "true");
-
-        window.location.href = "welcomescreen.html";
-      } catch (error) {
-        alert("Google Sign-In Failed: " + error.message);
+        showMsg("✅ Signed in with Google! Redirecting…", "success");
+        setTimeout(() => { window.location.href = "welcomescreen.html"; }, 600);
+      } catch (err) {
+        if (err.code === "auth/popup-blocked" || err.code === "auth/popup-closed-by-user") {
+          // Popup blocked — fall back to full-page redirect
+          showMsg("Pop-up blocked. Redirecting to Google sign-in…", "success");
+          setTimeout(() => signInWithRedirect(auth, googleProvider), 1000);
+        } else if (err.code === "auth/cancelled-popup-request") {
+          // Silently ignore duplicate popup requests
+          setLoading(googleBtn, googleBtnText, false, "Continue with Google");
+        } else {
+          const msg = friendlyError(err.code) || err.message;
+          showMsg(msg);
+          setLoading(googleBtn, googleBtnText, false, "Continue with Google");
+        }
       }
     };
   </script>
