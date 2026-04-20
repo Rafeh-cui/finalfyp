@@ -250,6 +250,30 @@
     // 'female' or 'male'
     let voiceGender = localStorage.getItem('edubot_voice_gender') || 'female';
 
+    // Declare TTS state early so _selectBestVoice can be called from applyGenderUI
+    const speechSupported = 'speechSynthesis' in window;
+    let bestVoice = null;
+    const FEMALE_HINTS = ['Google UK English Female','Samantha','Microsoft Zira','Susan','Karen','Victoria','Moira','Tessa','Fiona','Helena','Female'];
+    const MALE_HINTS   = ['Google UK English Male','Alex','Daniel','Microsoft David','James','Tom','Fred','Male'];
+
+    function _selectBestVoice() {
+      if (!speechSupported) return;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+      const engVoices = voices.filter(v => v.lang.startsWith('en'));
+      const hints = voiceGender === 'female' ? FEMALE_HINTS : MALE_HINTS;
+      for (const hint of hints) {
+        const v = engVoices.find(v => v.name.includes(hint));
+        if (v) { bestVoice = v; return; }
+      }
+      bestVoice = engVoices[0] || null;
+    }
+
+    if (speechSupported) {
+      window.speechSynthesis.onvoiceschanged = _selectBestVoice;
+      _selectBestVoice();
+    }
+
     function applyGenderUI() {
       if (voiceGender === 'female') {
         genderToggle.textContent = '♀ Female';
@@ -325,35 +349,6 @@
     function hideSuggestions() { suggestionsBar.style.display = 'none'; }
 
     // ── Voice TTS — gender-aware ──────────────────────────────────────────────
-    const speechSupported = 'speechSynthesis' in window;
-    let bestVoice = null;
-
-    // Female voice name hints (in preference order)
-    const FEMALE_HINTS = ['Google UK English Female','Samantha','Microsoft Zira','Susan','Karen','Victoria','Moira','Tessa','Fiona','Helena','Female'];
-    // Male voice name hints
-    const MALE_HINTS   = ['Google UK English Male','Alex','Daniel','Microsoft David','James','Tom','Fred','Male'];
-
-    function _selectBestVoice() {
-      if (!speechSupported) return;
-      const voices = window.speechSynthesis.getVoices();
-      if (!voices.length) return;
-
-      const engVoices = voices.filter(v => v.lang.startsWith('en'));
-      const hints = voiceGender === 'female' ? FEMALE_HINTS : MALE_HINTS;
-
-      for (const hint of hints) {
-        const v = engVoices.find(v => v.name.includes(hint));
-        if (v) { bestVoice = v; return; }
-      }
-      // Fallback: first English voice
-      bestVoice = engVoices[0] || null;
-    }
-
-    if (speechSupported) {
-      window.speechSynthesis.onvoiceschanged = _selectBestVoice;
-      _selectBestVoice();
-    }
-
     function speakText(text, lang = 'en') {
       if (!speechSupported) return;
       window.speechSynthesis.cancel();
