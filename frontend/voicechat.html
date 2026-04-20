@@ -475,6 +475,111 @@
       if (recognition) recognition.lang = micLang;
     });
 
+    // ── Pitch detection (Web Audio API) ──────────────────────────────────────
+    // Analyzes the user's microphone audio to estimate fundamental frequency (F0).
+    // Female voices: F0 typically 165–300 Hz  |  Male voices: F0 typically 85–155 Hz
+    // Threshold at 160 Hz separates the two with a comfortable margin.
+
+    let _audioCtx      = null;
+    let _analyserNode  = null;
+    let _micStream     = null;
+    let _pitchInterval = null;
+    let _pitchReadings = [];
+
+    /** Autocorrelation-based pitch estimator. Returns Hz or null (silence). */
+    function _getPitch(buf, sampleRate) {
+      // Energy gate — skip frames that are too quiet (silence / background noise)
+      let rms = 0;
+      for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
+      if (Math.sqrt(rms / buf.length) < 0.012) return null;
+
+      // Search for the lag that maximises autocorrelation within the human voice range
+      const minLag = Math.floor(sampleRate / 400);   // 400 Hz upper bound
+      const maxLag = Math.floor(sampleRate / 70);    // 70  Hz lower bound
+      const N = buf.length;
+      let bestCorr = -Infinity, bestLag = -1;
+      for (let lag = minLag; lag <= maxLag; lag++) {
+        let corr = 0;
+        for (let i = 0; i < N - lag; i++) corr += buf[i] * buf[i + lag];
+        if (corr > bestCorr) { bestCorr = corr; bestLag = lag; }
+      }
+      return (bestLag > 0 && bestCorr > 0.005) ? sampleRate / bestLag : null;
+    }
+
+    /** Open microphone → AnalyserNode and start collecting pitch samples every 80 ms. */
+    async function _startPitchDetector() {
+      if (!navigator.mediaDevices?.getUserMedia) return;
+      try {
+        _audioCtx = _audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (_audioCtx.state === 'suspended') await _audioCtx.resume();
+
+        _micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+        const source = _audioCtx.createMediaStreamSource(_micStream);
+        _analyserNode = _audioCtx.createAnalyser();
+        _analyserNode.fftSize = 2048;
+        source.connect(_analyserNode);
+
+        _pitchReadings = [];
+        const buf = new Float32Array(_analyserNode.fftSize);
+        _pitchInterval = setInterval(() => {
+          if (!_analyserNode) return;
+          _analyserNode.getFloatTimeDomainData(buf);
+          const p = _getPitch(buf, _audioCtx.sampleRate);
+          if (p !== null) _pitchReadings.push(p);
+        }, 80);
+      } catch (e) {
+        console.warn('[EduBot] Pitch detector unavailable:', e.message);
+      }
+    }
+
+    /** Stop sampling and release the microphone stream. */
+    function _stopPitchDetector() {
+      clearInterval(_pitchInterval); _pitchInterval = null;
+      if (_micStream)     { _micStream.getTracks().forEach(t => t.stop()); _micStream = null; }
+      if (_analyserNode)  { _analyserNode.disconnect(); _analyserNode = null; }
+    }
+
+    /** Show a brief auto-detect toast at the bottom of the screen. */
+    function _showGenderToast(gender) {
+      let toast = document.getElementById('genderToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'genderToast';
+        toast.style.cssText =
+          'position:fixed;bottom:88px;left:50%;transform:translateX(-50%);' +
+          'background:rgba(15,23,42,0.95);border:1px solid rgba(59,130,246,0.45);' +
+          'color:#bfdbfe;font-size:13px;padding:7px 18px;border-radius:20px;' +
+          'z-index:9999;pointer-events:none;transition:opacity 0.5s;white-space:nowrap;';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = gender === 'female'
+        ? '🎙️ Female voice detected — using ♀ voice'
+        : '🎙️ Male voice detected — using ♂ voice';
+      toast.style.opacity = '1';
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 2800);
+    }
+
+    /**
+     * Called after recording ends.
+     * Uses the median of collected pitch readings to classify gender,
+     * then updates voiceGender + UI if changed.
+     */
+    function _applyDetectedGender() {
+      if (_pitchReadings.length < 5) return; // not enough voiced frames → skip
+      const sorted   = [..._pitchReadings].sort((a, b) => a - b);
+      const median   = sorted[Math.floor(sorted.length / 2)];
+      const detected = median > 160 ? 'female' : 'male';
+      _pitchReadings = [];       // clear for next session
+
+      if (detected !== voiceGender) {
+        voiceGender = detected;
+        localStorage.setItem('edubot_voice_gender', voiceGender);
+        applyGenderUI();
+      }
+      _showGenderToast(voiceGender);
+    }
+
     // ── Speech recognition ───────────────────────────────────────────────────
     let recognition = null;
     let micOn = false;
@@ -491,16 +596,34 @@
       recognition.continuous = false; recognition.interimResults = false;
       recognition.lang = micLang; recognition.maxAlternatives = 1;
 
-      recognition.onstart  = () => { micOn = true;  setListening(true); };
-      recognition.onend    = () => { micOn = false; setListening(false); };
-      recognition.onerror  = e  => { console.warn('[EduBot]', e.error); micOn = false; setListening(false); };
-      recognition.onresult = e  => {
+      recognition.onstart = () => { micOn = true; setListening(true); };
+
+      // When recognition ends: stop pitch detector → classify gender → update voice
+      recognition.onend = () => {
+        micOn = false;
+        setListening(false);
+        _stopPitchDetector();
+        _applyDetectedGender();
+      };
+
+      recognition.onerror  = e => { console.warn('[EduBot]', e.error); micOn = false; setListening(false); };
+      recognition.onresult = e => {
         const t = e.results[e.results.length - 1][0].transcript.trim();
         if (t) { textInput.value = t; sendQuestion(t); }
       };
 
-      function startMic() { if (!recognition) return; window.stopSpeech(); try { recognition.lang = micLang; recognition.start(); } catch(e){} }
-      function stopMic()  { if (!recognition) return; try { recognition.stop(); } catch(e){} }
+      // Start: launch pitch detector alongside speech recognition
+      function startMic() {
+        if (!recognition) return;
+        window.stopSpeech();
+        _startPitchDetector();                              // begin audio analysis
+        try { recognition.lang = micLang; recognition.start(); } catch(e) {}
+      }
+      // Stop: just stop recognition; onend handler finishes pitch work
+      function stopMic() {
+        if (!recognition) return;
+        try { recognition.stop(); } catch(e) {}
+      }
 
       voiceBtn.addEventListener('mousedown',  ()  => startMic());
       voiceBtn.addEventListener('mouseup',    ()  => stopMic());
