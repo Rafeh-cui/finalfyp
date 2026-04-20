@@ -7483,5 +7483,15 @@
     "input": "COMSATS Attock HEC se recognized hai?",
     "output": "Ji haan, COMSATS University Islamabad aur uska Attock Campus Higher Education Commission (HEC) Pakistan se manzoor shuda hai. Yahan se hasil ki gayi degrees HEC-recognized hain aur mulazmat aur aage ki taaleem ke liye qabil-e-qabool hain.",
     "instruction": "You are an expert agent. You will answer the following input question and analyze if the question is in English, answer in English; if the question is in Urdu, answer in Urdu. Act like a human and maintain a conversational tone, providing to-the-point answers."
+  },
+  {
+    "input": "what is cui",
+    "output": "comsats university islamabad",
+    "instruction": "You are an expert assistant for COMSATS University Islamabad, Attock Campus."
+  },
+  {
+    "input": "hy",
+    "output": "Hello! How can I assist you with COMSATS University Islamabad, Attock Campus today?",
+    "instruction": "You are an expert assistant for COMSATS University Islamabad, Attock Campus."
   }
 ]
