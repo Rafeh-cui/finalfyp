@@ -300,7 +300,7 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 ADMIN_KEY = os.environ.get("ADMIN_KEY", "edubot-admin-2025")
 
 SYSTEM_PROMPT_TEMPLATE = """You are EduBot — the official AI assistant for COMSATS University Islamabad, Attock Campus.
-
+{user_context}
 STRICT RULES:
 1. LANGUAGE: If the student writes in Urdu → reply in Urdu. If English → reply in English. Never mix.
 2. ACCURACY: Only answer from the KNOWLEDGE BASE below. Do NOT invent facts, fees, names, or dates.
@@ -308,6 +308,7 @@ STRICT RULES:
 4. SCOPE: Only answer questions about COMSATS Attock Campus. Politely decline unrelated questions.
 5. FALLBACK: If the Knowledge Base has no answer, say so and direct to: 057-9316330 or [email protected]
 6. CONTEXT: The conversation history below shows previous turns. Use it to understand follow-up questions.
+7. PERSONALISATION: Address the student by their first name naturally and warmly in your responses.
 
 You help with:
 - Admissions, eligibility, how to apply
@@ -395,9 +396,20 @@ def _is_fallback_answer(text: str) -> bool:
 # Core response generation
 # ---------------------------------------------------------------------------
 
-def _build_system_prompt(question: str) -> str:
+def _build_system_prompt(question: str, user_name: str = "") -> str:
+    # Build user context line
+    if user_name:
+        first = user_name.strip().split()[0]
+        user_context = (
+            f"\nThe student you are talking to is named {user_name}. "
+            f"Address them as '{first}' naturally and warmly in your replies "
+            f"(e.g. 'Sure, {first}!' or 'Great question, {first}!').\n"
+        )
+    else:
+        user_context = ""
+
     if _is_greeting(question):
-        return SYSTEM_PROMPT_TEMPLATE.format(dataset_context="")
+        return SYSTEM_PROMPT_TEMPLATE.format(user_context=user_context, dataset_context="")
 
     similar = kb.find_similar(question, top_k=6, min_score=0.12)
     if similar:
@@ -405,13 +417,13 @@ def _build_system_prompt(question: str) -> str:
         context = DATASET_CONTEXT_TEMPLATE.format(qa_pairs=qa_text)
     else:
         context = "\n(No matching knowledge base entries found. Answer from general COMSATS Attock knowledge only.)"
-    return SYSTEM_PROMPT_TEMPLATE.format(dataset_context=context)
+    return SYSTEM_PROMPT_TEMPLATE.format(user_context=user_context, dataset_context=context)
 
 
-def _call_gemini(question: str, model_name: str, history: list[dict]) -> str:
+def _call_gemini(question: str, model_name: str, history: list[dict], user_name: str = "") -> str:
     from google.genai import types as _types
 
-    system_prompt = _build_system_prompt(question)
+    system_prompt = _build_system_prompt(question, user_name)
     contents: list = []
     for turn in history[-6:]:
         role = "user" if turn.get("role") == "user" else "model"
@@ -475,6 +487,7 @@ def _generate_response(
     question: str,
     history: list[dict],
     want_audio: bool,
+    user_name: str = "",
 ) -> tuple[str, str, Optional[str]]:
     cache_key = _normalize(question)
 
@@ -497,7 +510,7 @@ def _generate_response(
         models_to_try = ["gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-flash"]
         for model_name in models_to_try:
             try:
-                answer = _call_gemini(question, model_name, history)
+                answer = _call_gemini(question, model_name, history, user_name)
                 language = _detect_language(answer)
 
                 # ── Auto-learn: question not well-covered in dataset ─────────
@@ -599,6 +612,7 @@ class ChatRequest(BaseModel):
     question: str
     history: List[HistoryTurn] = []
     want_audio: bool = False
+    user_name: str = ""
 
 
 class ChatResponse(BaseModel):
@@ -638,10 +652,13 @@ async def chat(request: ChatRequest) -> ChatResponse:
         raise HTTPException(status_code=400, detail="Question must not be empty.")
 
     history = [{"role": t.role, "content": t.content} for t in request.history]
+    user_name = request.user_name.strip()[:60]   # cap length for safety
     loop = asyncio.get_event_loop()
     try:
         answer, language, audio_base64 = await asyncio.wait_for(
-            loop.run_in_executor(None, _generate_response, question, history, request.want_audio),
+            loop.run_in_executor(
+                None, _generate_response, question, history, request.want_audio, user_name
+            ),
             timeout=25.0,
         )
     except asyncio.TimeoutError:
